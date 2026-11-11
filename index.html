@@ -26,7 +26,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <!-- Las tipografías cargan sin bloquear la pantalla (así la pantalla de carga aparece de inmediato) -->
+  <link id="fuentes" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" media="print" onload="this.media='all'; if (window.alCargarFuentes) window.alCargarFuentes();">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet"></noscript>
 
   <link rel="stylesheet" href="styles.css">
   <script>
@@ -53,6 +55,31 @@
       <div class="intro__barra"><span></span></div>
     </div>
   </div>
+  <script>
+    // La pantalla de carga espera en pausa hasta que se ve de verdad en pantalla
+    // y la tipografía del logo está lista; entonces arranca desde el inicio.
+    (function () {
+      var html = document.documentElement;
+      if (!html.classList.contains('con-intro')) return;
+      var iniciado = false;
+      function arrancar() {
+        if (iniciado) return;
+        iniciado = true;
+        requestAnimationFrame(function () {
+          requestAnimationFrame(function () {
+            html.classList.add('intro-arranca');
+            setTimeout(function () { html.classList.add('intro-lista'); }, 3000);   // seguro: siempre se quita
+          });
+        });
+      }
+      function esperarLogo() {
+        try { document.fonts.load('800 1em "Archivo"').then(arrancar, arrancar); } catch (e) { arrancar(); }
+      }
+      var fuentes = document.getElementById('fuentes');
+      if (fuentes && fuentes.media === 'all') { esperarLogo(); } else { window.alCargarFuentes = esperarLogo; }
+      setTimeout(arrancar, 2500);   // si la tipografía tarda mucho, arranca igual
+    })();
+  </script>
 
   <a class="saltar" href="#contenido">Saltar al contenido</a>
   <div class="progreso" aria-hidden="true"></div>

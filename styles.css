@@ -227,6 +227,15 @@ a { color: inherit; }
 @keyframes suave-entra { to { opacity: 1; } }
 @keyframes suave-sale { to { opacity: 0; } }
 
+/* Todo queda en pausa hasta que la pantalla de carga se ve de verdad (clase intro-arranca) */
+.con-intro:not(.intro-arranca) .intro,
+.con-intro:not(.intro-arranca) .intro *,
+.con-intro:not(.intro-arranca) .entrar,
+.con-intro:not(.intro-arranca) .entrar-linea,
+.con-intro:not(.intro-arranca) .sello,
+.con-intro:not(.intro-arranca) .foto-nitida,
+.con-intro:not(.intro-arranca) .foto-borrosa { animation-play-state: paused !important; }
+
 /* La portada espera a que termine la entrada para hacer su propia animación */
 .con-intro.js .entrar, .con-intro.js .entrar-linea { animation-delay: calc(var(--d) * 110ms + 1.9s); }
 .con-intro.js .sello { animation-delay: 2.6s; }

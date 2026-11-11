@@ -4,11 +4,6 @@
   var punteroFino = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var raiz = document.documentElement;
 
-  // 0. Seguro: la animación de entrada siempre desaparece, pase lo que pase
-  if (raiz.classList.contains('con-intro')) {
-    setTimeout(function () { raiz.classList.add('intro-lista'); }, 2700);
-  }
-
   // Congelar el fondo mientras hay una ficha o el menú abierto.
   // (En iPhone no basta con overflow:hidden; se fija el cuerpo y luego se vuelve al mismo punto.)
   var scrollBloqueado = false;
