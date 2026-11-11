@@ -218,6 +218,15 @@ a { color: inherit; }
 }
 @keyframes barra-llena { to { transform: scaleX(1); } }
 
+/* Versión suave (para quien tiene "reducir movimiento"): el logo aparece y se desvanece */
+.intro-suave .intro__letras span { transform: none; animation: none; }
+.intro-suave .intro__logo { opacity: 0; animation: suave-entra .5s ease .1s forwards; }
+.intro-suave .intro__punto { animation: suave-entra .4s ease .3s forwards; }
+.intro-suave .intro__barra span { animation-duration: .9s; }
+.intro-suave .intro__panel, .intro-suave .intro__lima { clip-path: none; animation: suave-sale .5s ease 1.2s forwards; }
+@keyframes suave-entra { to { opacity: 1; } }
+@keyframes suave-sale { to { opacity: 0; } }
+
 /* La portada espera a que termine la entrada para hacer su propia animación */
 .con-intro.js .entrar, .con-intro.js .entrar-linea { animation-delay: calc(var(--d) * 110ms + 1.9s); }
 .con-intro.js .sello { animation-delay: 2.6s; }
@@ -738,7 +747,21 @@ a { color: inherit; }
 }
 .detalle.abierto::backdrop { opacity: 1; }
 
-.detalle__agarre { width: 44px; height: 5px; border-radius: 3px; background: #45433D; margin: 0 auto 16px; }
+/* Agarradera: se arrastra hacia abajo para cerrar (zona de toque grande y cómoda) */
+.detalle__agarre {
+  position: relative;
+  height: 28px; margin: -14px -22px 6px;
+  cursor: grab;
+  touch-action: none;
+}
+.detalle__agarre::before {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 46px; height: 5px; margin: -2.5px 0 0 -23px;
+  border-radius: 3px; background: #57544C;
+  transition: background-color .2s, width .2s;
+}
+.detalle.arrastrando .detalle__agarre::before { background: var(--lima); }
+.detalle.arrastrando { transition: none; }
 .detalle__cerrar {
   position: absolute; top: 16px; right: 16px;
   width: 42px; height: 42px; border-radius: 50%;

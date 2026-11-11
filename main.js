@@ -336,6 +336,45 @@
     });
     // la tecla Esc cierra con la misma animación
     ficha.addEventListener('cancel', function (e) { e.preventDefault(); cerrarFicha(); });
+
+    // Arrastrar hacia abajo para cerrar (celular). Funciona desde la agarradera,
+    // o desde cualquier parte de la ficha cuando ya está arriba del todo.
+    var esCelular = window.matchMedia('(max-width: 767px)');
+    var inicioY = 0, desplazo = 0, inicioT = 0, arrastrando = false;
+
+    ficha.addEventListener('touchstart', function (e) {
+      if (!esCelular.matches || !ficha.open) return;
+      var desdeAgarre = !!e.target.closest('.detalle__agarre');
+      if (!desdeAgarre && ficha.scrollTop > 0) return;   // si está leyendo más abajo, deja hacer scroll normal
+      inicioY = e.touches[0].clientY;
+      inicioT = Date.now();
+      desplazo = 0;
+      arrastrando = true;
+    }, { passive: true });
+
+    ficha.addEventListener('touchmove', function (e) {
+      if (!arrastrando) return;
+      desplazo = e.touches[0].clientY - inicioY;
+      if (desplazo <= 0) {                                  // hacia arriba: es scroll normal
+        if (!e.target.closest('.detalle__agarre')) { arrastrando = false; ficha.classList.remove('arrastrando'); ficha.style.transform = ''; }
+        return;
+      }
+      e.preventDefault();                                   // hacia abajo: mueve la ficha con el dedo
+      ficha.classList.add('arrastrando');
+      ficha.style.transform = 'translateY(' + desplazo + 'px)';
+    }, { passive: false });
+
+    var soltar = function () {
+      if (!arrastrando) return;
+      arrastrando = false;
+      var velocidad = desplazo / Math.max(Date.now() - inicioT, 1);   // px por milisegundo
+      ficha.classList.remove('arrastrando');
+      ficha.style.transform = '';
+      // si la bajó lo suficiente, o la deslizó rápido, se cierra; si no, vuelve a su sitio
+      if (desplazo > 110 || (desplazo > 30 && velocidad > 0.6)) cerrarFicha();
+    };
+    ficha.addEventListener('touchend', soltar);
+    ficha.addEventListener('touchcancel', soltar);
   }
 
   // 11. Año actual en el pie

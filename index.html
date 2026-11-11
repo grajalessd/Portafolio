@@ -31,13 +31,21 @@
   <link rel="stylesheet" href="styles.css">
   <script>
     document.documentElement.classList.add('js');
-    // Animación de entrada: solo la primera vez por visita y nunca con "reducir movimiento"
-    try {
-      if (!sessionStorage.getItem('intro-vista') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('con-intro');
-        sessionStorage.setItem('intro-vista', '1');
+    // Animación de entrada: sale cada vez que alguien entra,
+    // salvo que la haya visto hace menos de 30 minutos (para no repetirla en cada recarga).
+    // Con "reducir movimiento" activado sale una versión suave, sin movimiento.
+    (function () {
+      var html = document.documentElement, mostrar = true;
+      try {
+        var ultima = +localStorage.getItem('intro-ultima') || 0;
+        mostrar = Date.now() - ultima > 30 * 60 * 1000;
+        if (mostrar) localStorage.setItem('intro-ultima', String(Date.now()));
+      } catch (e) {}
+      if (mostrar) {
+        html.classList.add('con-intro');
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) html.classList.add('intro-suave');
       }
-    } catch (e) {}
+    })();
   </script>
 </head>
 <body>
