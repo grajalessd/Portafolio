@@ -193,6 +193,48 @@
     });
   }
 
-  // 7. Año actual en el pie
+  // 7. Menú de pantalla completa (celular)
+  var botonMenu = document.querySelector('.menu-boton');
+  var menuMovil = document.getElementById('menu-movil');
+  if (botonMenu && menuMovil) {
+    var abrirMenu = function (abrir) {
+      botonMenu.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+      botonMenu.setAttribute('aria-label', abrir ? 'Cerrar menú' : 'Abrir menú');
+      menuMovil.classList.toggle('abierto', abrir);
+      if (abrir) { menuMovil.removeAttribute('inert'); } else { menuMovil.setAttribute('inert', ''); }
+      raiz.style.overflow = abrir ? 'hidden' : '';         // la página no se mueve detrás del menú
+      encabezado.classList.toggle('menu-abierto', abrir);
+    };
+    botonMenu.addEventListener('click', function () {
+      abrirMenu(botonMenu.getAttribute('aria-expanded') !== 'true');
+    });
+    // al tocar una sección, se cierra el menú y baja hasta ella
+    menuMovil.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { abrirMenu(false); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menuMovil.classList.contains('abierto')) { abrirMenu(false); botonMenu.focus(); }
+    });
+    // si la pantalla se agranda (computador), el menú se cierra solo
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', function (m) { if (m.matches) abrirMenu(false); });
+  }
+
+  // 8. Marca en el menú la sección en la que estás
+  if ('IntersectionObserver' in window) {
+    var enlacesMenu = document.querySelectorAll('.menu a, .menu-movil__lista a');
+    var marcarActiva = new IntersectionObserver(function (entradas) {
+      entradas.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var id = '#' + e.target.id;
+        enlacesMenu.forEach(function (a) { a.classList.toggle('activa', a.getAttribute('href') === id); });
+      });
+    }, { rootMargin: '-45% 0px -50% 0px' });
+    ['proyectos', 'sobre-mi', 'por-que', 'como-trabajamos', 'contacto', 'inicio'].forEach(function (id) {
+      var s = document.getElementById(id);
+      if (s) marcarActiva.observe(s);
+    });
+  }
+
+  // 9. Año actual en el pie
   document.getElementById('anio').textContent = new Date().getFullYear();
 })();

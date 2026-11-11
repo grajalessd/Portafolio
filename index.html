@@ -46,11 +46,36 @@
         <a href="#por-que">¿Por qué trabajar conmigo?</a>
         <a href="#como-trabajamos">¿Cómo trabajamos?</a>
       </nav>
-      <a class="boton boton--pequeno js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">
-        <span class="punto-vivo" aria-hidden="true"></span> Escríbeme
-      </a>
+      <div class="encabezado__acciones">
+        <a class="boton boton--pequeno js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+          <span class="punto-vivo" aria-hidden="true"></span> Escríbeme
+        </a>
+        <button type="button" class="menu-boton" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
+
+  <!-- ===== Menú de pantalla completa (celular y pantallas pequeñas) ===== -->
+  <div class="menu-movil" id="menu-movil" inert>
+    <nav class="contenedor menu-movil__nav" aria-label="Secciones">
+      <ol class="menu-movil__lista">
+        <li style="--i:0"><a href="#proyectos"><span class="menu-movil__num">01</span> Proyectos</a></li>
+        <li style="--i:1"><a href="#sobre-mi"><span class="menu-movil__num">02</span> Sobre mí</a></li>
+        <li style="--i:2"><a href="#por-que"><span class="menu-movil__num">03</span> ¿Por qué trabajar conmigo?</a></li>
+        <li style="--i:3"><a href="#como-trabajamos"><span class="menu-movil__num">04</span> ¿Cómo trabajamos?</a></li>
+        <li style="--i:4"><a href="#contacto"><span class="menu-movil__num">05</span> Contacto</a></li>
+      </ol>
+      <div class="menu-movil__pie" style="--i:5">
+        <a class="boton boton--grande js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+          <svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>
+          Cuéntame tu idea
+        </a>
+        <a class="menu-movil__red" href="https://instagram.com/grajalessd" target="_blank" rel="noopener">@grajalessd</a>
+      </div>
+    </nav>
+  </div>
 
   <main id="contenido">
 
@@ -150,7 +175,11 @@
               <div class="navegador">
                 <div class="navegador__barra" aria-hidden="true">
                   <i></i><i></i><i></i>
-                  <span class="navegador__url">burgerribs · proyecto de muestra</span>
+                  <a class="navegador__url" href="https://burgerribs-demo.netlify.app/" target="_blank" rel="noopener" aria-label="Abrir Burger Ribs en vivo (se abre en otra pestaña)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>
+                    burgerribs-demo.netlify.app
+                    <span class="navegador__abrir" aria-hidden="true">↗</span>
+                  </a>
                 </div>
                 <img class="js-pc" src="img/burgerribs-pc-1.jpg" width="1200" height="977" loading="lazy" decoding="async"
                      alt="Burger Ribs en computador: portada">
@@ -185,9 +214,13 @@
                     <li>Pedidos directo a WhatsApp</li>
                     <li>Perfecta en celular y computador</li>
                   </ul>
-                  <!-- Cuando tengas el enlace de Netlify de burgerribs, quita los
-                       comentarios de la línea de abajo y pon el enlace en href. -->
-                  <!-- <a class="boton boton--fantasma" href="https://TU-ENLACE.netlify.app" target="_blank" rel="noopener">Ver página en vivo ↗</a> -->
+                  <div class="en-vivo">
+                    <p class="en-vivo__texto"><span class="en-vivo__punto" aria-hidden="true"></span> ¿Quieres verla en acción? <strong>Entra y pruébala como si fueras un cliente.</strong></p>
+                    <a class="boton boton--grande en-vivo__boton" href="https://burgerribs-demo.netlify.app/" target="_blank" rel="noopener">
+                      Ver página en vivo
+                      <span class="en-vivo__flecha" aria-hidden="true">↗</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
