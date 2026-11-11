@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title>Grajalessd | Páginas web, automatización y estrategia digital</title>
+  <meta name="description" content="Tú traes la idea, yo la hago realidad: páginas web, automatizaciones, estrategias y soluciones con IA para tu negocio. Desde Manizales para donde estés. Cuéntame tu idea y recibe una propuesta sin compromiso.">
+  <meta name="theme-color" content="#0F0F0E">
+
+  <!-- ===== Open Graph (vista previa al compartir por WhatsApp) =====
+       CUANDO PUBLIQUES EN NETLIFY: reemplaza "https://jeronimograjales.netlify.app"
+       por tu enlace real en las 3 líneas que lo usan (canonical, og:url y og:image). -->
+  <link rel="canonical" href="https://jeronimograjales.netlify.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:site_name" content="Grajalessd">
+  <meta property="og:title" content="Grajalessd | Tú traes la idea, yo la hago realidad">
+  <meta property="og:description" content="Páginas web, automatizaciones, estrategias y soluciones con IA para tu negocio. Cuéntame tu idea y te envío una propuesta sin compromiso.">
+  <meta property="og:url" content="https://jeronimograjales.netlify.app/">
+  <meta property="og:image" content="https://jeronimograjales.netlify.app/img/og-imagen.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Jerónimo Grajales, diseñador de páginas web en Manizales">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+  <div class="progreso" aria-hidden="true"></div>
+
+  <!-- ===== Encabezado ===== -->
+  <header class="encabezado">
+    <div class="contenedor encabezado__fila">
+      <a class="marca" href="#inicio" aria-label="Grajalessd, inicio">grajalessd<i>.</i></a>
+      <nav class="menu" aria-label="Secciones">
+        <a href="#proyectos">Proyectos</a>
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#por-que">¿Por qué trabajar conmigo?</a>
+        <a href="#como-trabajamos">¿Cómo trabajamos?</a>
+      </nav>
+      <a class="boton boton--pequeno js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+        <span class="punto-vivo" aria-hidden="true"></span> Escríbeme
+      </a>
+    </div>
+  </header>
+
+  <main id="contenido">
+
+    <!-- ===== 1. Portada ===== -->
+    <section class="portada" id="inicio">
+      <div class="portada__fondo" aria-hidden="true">
+        <span class="mancha mancha--1"></span>
+        <span class="mancha mancha--2"></span>
+      </div>
+
+      <!-- Foto difuminada: nítida en el centro, borrosa y desvanecida hacia los bordes -->
+      <div class="portada__media" aria-hidden="true">
+        <img class="foto-borrosa" src="img/portada-borrosa.jpg" alt="" width="500" height="625" decoding="async">
+        <img class="foto-nitida"
+             src="img/portada-1600.jpg"
+             srcset="img/portada-1000.jpg 1000w, img/portada-1600.jpg 1600w, img/portada-2400.jpg 2400w"
+             sizes="(min-width: 900px) 58vw, 100vw"
+             width="1600" height="2000" alt="" fetchpriority="high" decoding="async">
+      </div>
+
+      <div class="contenedor portada__contenido">
+        <p class="etiqueta entrar" style="--d:0"><span class="punto-lima" aria-hidden="true"></span> Diseño web · Automatización · Estrategia · IA</p>
+
+        <h1 class="portada__titulo">
+          <span class="visualmente-oculto">Jerónimo Grajales: diseño web, automatización y estrategia digital</span>
+          <span class="linea" aria-hidden="true"><span class="entrar-linea" style="--d:1">Jerónimo</span></span>
+          <span class="linea" aria-hidden="true"><span class="entrar-linea" style="--d:2">Grajales<em>.</em></span></span>
+        </h1>
+
+        <p class="portada__frase entrar" style="--d:3">
+          Tú traes la idea, <em>yo la hago realidad.</em>
+          Páginas web, automatizaciones, estrategias y soluciones con IA: todo lo que tu negocio necesita para crecer, en un solo lugar.
+        </p>
+
+        <div class="botones entrar" style="--d:4">
+          <a class="boton boton--grande js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+            <svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>
+            Cuéntame tu idea
+          </a>
+          <a class="boton boton--fantasma boton--grande" href="#proyectos">Ver proyectos <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+
+      <!-- Sello giratorio -->
+      <div class="sello" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <defs><path id="circulo" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs>
+          <text><textPath href="#circulo" textLength="486" lengthAdjust="spacing">ideas que se vuelven realidad ·</textPath></text>
+        </svg>
+        <span class="sello__centro">✦</span>
+      </div>
+
+      <a class="bajar" href="#proyectos" aria-label="Bajar a proyectos"><span></span></a>
+    </section>
+
+    <!-- ===== Franjas cruzadas: qué hago (lima) y para quién (crema) ===== -->
+    <div class="franjas">
+      <p class="visualmente-oculto">Lo que hago: páginas web, automatizaciones, estrategias digitales y soluciones con IA. Para negocios, emprendedores, marcas personales, profesionales y empresas.</p>
+      <div class="franja franja--quien" aria-hidden="true">
+        <div class="franja__pista">
+          <span>Para negocios</span><b>✦</b><span>Emprendedores</span><b>✦</b><span>Marcas personales</span><b>✦</b><span>Profesionales</span><b>✦</b><span>Empresas</span><b>✦</b>
+          <span>Para negocios</span><b>✦</b><span>Emprendedores</span><b>✦</b><span>Marcas personales</span><b>✦</b><span>Profesionales</span><b>✦</b><span>Empresas</span><b>✦</b>
+          <span>Para negocios</span><b>✦</b><span>Emprendedores</span><b>✦</b><span>Marcas personales</span><b>✦</b><span>Profesionales</span><b>✦</b><span>Empresas</span><b>✦</b>
+          <span>Para negocios</span><b>✦</b><span>Emprendedores</span><b>✦</b><span>Marcas personales</span><b>✦</b><span>Profesionales</span><b>✦</b><span>Empresas</span><b>✦</b>
+        </div>
+      </div>
+      <div class="franja franja--que" aria-hidden="true">
+        <div class="franja__pista">
+          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 2. Proyectos ===== -->
+    <section class="seccion" id="proyectos">
+      <div class="contenedor">
+        <header class="seccion__cabeza revelar">
+          <p class="etiqueta"><span class="num">01</span> Proyectos</p>
+          <h2 class="titulo-animado">Mira lo que <em>puedo crear</em></h2>
+          <p class="seccion__intro">Páginas que atrapan a primera vista y llevan a tu cliente directo a escribirte. Toca las pestañas y mira cómo se ve en computador y en celular.</p>
+        </header>
+
+        <div class="proyectos">
+
+          <!-- ==========================================================
+               PROYECTO: Burger Ribs
+               Para agregar otro proyecto: copia todo este <article>
+               (desde <article> hasta </article>), pégalo debajo y
+               cambia textos e imágenes. Cada botón de pestaña lleva
+               la captura de computador (data-pc) y la de celular (data-movil).
+               ========================================================== -->
+          <article class="proyecto revelar">
+            <div class="proyecto__vitrina">
+              <div class="navegador">
+                <div class="navegador__barra" aria-hidden="true">
+                  <i></i><i></i><i></i>
+                  <span class="navegador__url">burgerribs · proyecto de muestra</span>
+                </div>
+                <img class="js-pc" src="img/burgerribs-pc-1.jpg" width="1200" height="977" loading="lazy" decoding="async"
+                     alt="Burger Ribs en computador: portada">
+              </div>
+              <div class="celular">
+                <img class="js-movil" src="img/burgerribs-movil-1.jpg" width="560" height="883" loading="lazy" decoding="async"
+                     alt="Burger Ribs en celular: portada">
+              </div>
+            </div>
+
+            <div class="proyecto__info">
+              <div class="pestanas" role="group" aria-label="Elegir pantalla del proyecto">
+                <button type="button" class="pestana" aria-pressed="true"
+                        data-pc="img/burgerribs-pc-1.jpg" data-movil="img/burgerribs-movil-1.jpg" data-nombre="portada">Portada</button>
+                <button type="button" class="pestana" aria-pressed="false"
+                        data-pc="img/burgerribs-pc-2.jpg" data-movil="img/burgerribs-movil-2.jpg" data-nombre="la carta">Carta</button>
+                <button type="button" class="pestana" aria-pressed="false"
+                        data-pc="img/burgerribs-pc-3.jpg" data-movil="img/burgerribs-movil-3.jpg" data-nombre="arma tu burger">Arma tu burger</button>
+              </div>
+
+              <div class="proyecto__texto">
+                <div>
+                  <span class="insignia">Proyecto de muestra</span>
+                  <h3>Burger Ribs</h3>
+                  <p class="proyecto__tipo">Restaurante · Manizales</p>
+                </div>
+                <div>
+                  <p class="proyecto__gancho">Tu cliente entra, se antoja, arma su hamburguesa y te hace el pedido por WhatsApp. <strong>En un par de toques, sin llamadas ni enredos.</strong></p>
+                  <ul class="chips" aria-label="Qué incluye">
+                    <li>Carta que antoja</li>
+                    <li>Arma tu burger</li>
+                    <li>Pedidos directo a WhatsApp</li>
+                    <li>Perfecta en celular y computador</li>
+                  </ul>
+                  <!-- Cuando tengas el enlace de Netlify de burgerribs, quita los
+                       comentarios de la línea de abajo y pon el enlace en href. -->
+                  <!-- <a class="boton boton--fantasma" href="https://TU-ENLACE.netlify.app" target="_blank" rel="noopener">Ver página en vivo ↗</a> -->
+                </div>
+              </div>
+            </div>
+          </article>
+          <!-- FIN PROYECTO: Burger Ribs -->
+
+          <a class="proximo revelar js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+            <span class="proximo__mas" aria-hidden="true">+</span>
+            <span>
+              <span class="proximo__titulo">El próximo puede ser <em>el tuyo</em></span>
+              <span class="proximo__sub">Una página, una automatización o una idea nueva para tu negocio: cuéntamela y te muestro cómo hacerla realidad.</span>
+            </span>
+            <span class="proximo__flecha" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3. Sobre mí ===== -->
+    <section class="sobre" id="sobre-mi">
+      <!-- Foto grande: ocupa media sección y se va sombreando hasta llegar al texto -->
+      <div class="sobre__media revelar">
+        <img src="img/sobre-mi-1200.jpg"
+             srcset="img/sobre-mi-1200.jpg 1200w, img/sobre-mi-2000.jpg 2000w"
+             sizes="(min-width: 900px) 62vw, 100vw"
+             width="1200" height="1548" loading="lazy" decoding="async"
+             alt="Jerónimo sonriendo, sentado en su moto">
+      </div>
+
+      <div class="contenedor sobre-mi">
+        <div class="sobre-mi__espacio" aria-hidden="true"></div>
+
+        <div class="sobre-mi__texto revelar">
+          <p class="etiqueta"><span class="num">02</span> Sobre mí</p>
+          <h2 class="titulo-animado">Hola, soy <em>Jerónimo</em></h2>
+          <p class="destacado">Diseño páginas web, automatizo procesos y creo soluciones con inteligencia artificial para que tu negocio <em>trabaje mejor.</em></p>
+          <p>Estudio Administración de Empresas en la Universidad de Manizales. Por eso no solo pienso en que tu página se vea bonita: pienso en lo que tu negocio necesita para crecer.</p>
+          <p>Amo crear y exprimir cada idea al máximo. Con la IA de mi lado, la lista de lo que podemos hacer juntos no tiene techo: <strong>si lo puedes imaginar, lo podemos construir.</strong></p>        </div>
+      </div>
+    </section>
+
+    <!-- ===== 4. ¿Por qué trabajar conmigo? ===== -->
+    <section class="seccion" id="por-que">
+      <div class="contenedor">
+        <header class="seccion__cabeza revelar">
+          <p class="etiqueta"><span class="num">03</span> La diferencia</p>
+          <h2 class="titulo-animado">¿Por qué trabajar <em>conmigo?</em></h2>
+        </header>
+
+        <ul class="bento">
+          <li class="tarjeta tarjeta--acento tarjeta--grande revelar">
+            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>
+            <h3>Me escribes, te respondo. Así de simple.</h3>
+            <p>Hablamos directo por WhatsApp, con respuestas rápidas para que tu proyecto avance sin pausas.</p>
+          </li>
+          <li class="tarjeta revelar">
+            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 17.5h2"/></svg>
+            <h3>Ves tu proyecto crecer en tiempo real</h3>
+            <p>Te mando avances y bocetos al momento, por mensaje o con un enlace que abres desde tu celular.</p>
+          </li>
+          <li class="tarjeta revelar">
+            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg>
+            <h3>¿Cambiaste de idea? Ajustes cuando los necesites</h3>
+            <p>Ajustamos y mejoramos sobre la marcha, no cuando ya esté todo hecho.</p>
+          </li>
+          <li class="tarjeta revelar">
+            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
+            <h3>Siempre sabrás en qué vamos</h3>
+            <p>Si quieres, te mantengo al tanto de cada paso. Cero sorpresas.</p>
+          </li>
+          <li class="tarjeta revelar">
+            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            <h3>¿Prefieres una reunión? La cuadramos</h3>
+            <p>Si te queda mejor hablarlo con calma, nos reunimos y lo revisamos juntos.</p>
+          </li>
+          <li class="tarjeta tarjeta--coral tarjeta--ancha revelar">
+            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg>
+            <h3>Creatividad que se nota, eficiencia que se siente</h3>
+            <p>Lo que hagamos no se va a parecer a nada más, y va a estar listo sin vueltas.</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 5. ¿Cómo trabajamos? ===== -->
+    <section class="seccion seccion--clara" id="como-trabajamos">
+      <div class="contenedor">
+        <header class="seccion__cabeza revelar">
+          <p class="etiqueta"><span class="num">04</span> El proceso</p>
+          <h2 class="titulo-animado">¿Cómo <em>trabajamos?</em></h2>
+          <p class="seccion__intro">Cuatro pasos, cero complicaciones. Tú me cuentas, yo me encargo del resto.</p>
+        </header>
+
+        <ol class="pasos" style="--avance:0">
+          <li class="paso revelar">
+            <span class="paso__num" aria-hidden="true">01</span>
+            <div>
+              <h3>Me cuentas tu idea</h3>
+              <p>Con un mensaje basta. Me cuentas qué haces y qué quieres lograr.</p>
+            </div>
+          </li>
+          <li class="paso revelar">
+            <span class="paso__num" aria-hidden="true">02</span>
+            <div>
+              <h3>Te envío un boceto</h3>
+              <p>Ves la primera versión antes de lo que imaginas, directo en tu celular.</p>
+            </div>
+          </li>
+          <li class="paso revelar">
+            <span class="paso__num" aria-hidden="true">03</span>
+            <div>
+              <h3>La pulimos juntos</h3>
+              <p>Cada detalle se ajusta hasta que digas «esto es justo lo que quería».</p>
+            </div>
+          </li>
+          <li class="paso revelar">
+            <span class="paso__num" aria-hidden="true">04</span>
+            <div>
+              <h3>¡Sale al aire!</h3>
+              <p>Tu proyecto queda listo y funcionando, para que lo disfrutes desde el primer día.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===== 6. Contacto ===== -->
+    <section class="contacto" id="contacto">
+      <div class="contenedor contacto__caja revelar">
+        <p class="etiqueta"><span class="num">05</span> Hablemos</p>
+        <h2 class="contacto__titulo titulo-animado">¿Arrancamos con <em>tu idea?</em></h2>
+        <p class="contacto__sub">Sea lo que sea que tengas en mente, escríbeme y te envío una propuesta hecha a tu medida. Sin compromiso.</p>
+
+        <a class="boton boton--enorme js-whatsapp js-magnetico" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+          <svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>
+          Escríbeme por WhatsApp
+          <span class="boton__flecha" aria-hidden="true">→</span>
+        </a>
+
+        <ul class="contacto__otros">
+          <li>
+            <a href="mailto:jgrajalesp0203@gmail.com">
+              <svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+              jgrajalesp0203@gmail.com
+            </a>
+          </li>
+          <li>
+            <a href="https://instagram.com/grajalessd" target="_blank" rel="noopener">
+              <svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" class="relleno"/></svg>
+              @grajalessd
+            </a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor pie__fila">
+      <p class="pie__grande" aria-hidden="true">grajalessd<em>.</em></p>
+      <p>© <span id="anio">2026</span> Jerónimo Grajales Pérez · Manizales, Caldas</p>
+    </div>
+  </footer>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
