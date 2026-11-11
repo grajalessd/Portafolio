@@ -9,6 +9,31 @@
     setTimeout(function () { raiz.classList.add('intro-lista'); }, 2700);
   }
 
+  // Congelar el fondo mientras hay una ficha o el menú abierto.
+  // (En iPhone no basta con overflow:hidden; se fija el cuerpo y luego se vuelve al mismo punto.)
+  var scrollBloqueado = false;
+  var posicionGuardada = 0;
+  function bloquearScroll() {
+    if (scrollBloqueado) return;
+    posicionGuardada = window.scrollY;
+    scrollBloqueado = true;
+    var cuerpo = document.body.style;
+    cuerpo.position = 'fixed';
+    cuerpo.top = -posicionGuardada + 'px';
+    cuerpo.left = '0';
+    cuerpo.right = '0';
+    cuerpo.width = '100%';
+  }
+  function liberarScroll() {
+    if (!scrollBloqueado) return;
+    var cuerpo = document.body.style;
+    cuerpo.position = ''; cuerpo.top = ''; cuerpo.left = ''; cuerpo.right = ''; cuerpo.width = '';
+    raiz.style.scrollBehavior = 'auto';          // volver al punto exacto, sin animación
+    window.scrollTo(0, posicionGuardada);
+    raiz.style.scrollBehavior = '';
+    scrollBloqueado = false;
+  }
+
   // 1. Mensaje prellenado de WhatsApp en todos los botones
   var mensaje = 'Hola Jerónimo, vi tu portafolio y quiero contarte una idea.';
   var enlaceWa = 'https://wa.me/573196150221?text=' + encodeURIComponent(mensaje);
@@ -111,6 +136,7 @@
 
   function alScroll() {
     pendiente = false;
+    if (scrollBloqueado) return;   // con una ficha o el menú abierto, el fondo no se toca
     var y = window.scrollY;
     var vh = window.innerHeight;
     var alto = document.documentElement.scrollHeight - vh;
@@ -214,7 +240,7 @@
       botonMenu.setAttribute('aria-label', abrir ? 'Cerrar menú' : 'Abrir menú');
       menuMovil.classList.toggle('abierto', abrir);
       if (abrir) { menuMovil.removeAttribute('inert'); } else { menuMovil.setAttribute('inert', ''); }
-      raiz.style.overflow = abrir ? 'hidden' : '';         // la página no se mueve detrás del menú
+      if (abrir) { bloquearScroll(); } else { liberarScroll(); }   // la página no se mueve detrás del menú
       encabezado.classList.toggle('menu-abierto', abrir);
       raiz.classList.toggle('menu-abierto-html', abrir);
     };
@@ -309,8 +335,8 @@
 
       botonOrigen = boton;
       ficha.scrollTop = 0;
+      bloquearScroll();
       ficha.showModal();
-      raiz.style.overflow = 'hidden';
       requestAnimationFrame(function () { requestAnimationFrame(function () { ficha.classList.add('abierto'); }); });
     };
 
@@ -319,7 +345,7 @@
       ficha.classList.remove('abierto');
       setTimeout(function () {
         ficha.close();
-        raiz.style.overflow = '';
+        liberarScroll();
         if (botonOrigen) botonOrigen.focus({ preventScroll: true });
       }, sinMovimiento ? 0 : 380);
     };
