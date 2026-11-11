@@ -637,6 +637,183 @@ a { color: inherit; }
 .imagina__palabra.entra { transform: translateY(100%); opacity: 0; transition: none; }
 .imagina__cierre { margin-bottom: 4px !important; }
 
+/* ---------- Pista "toca un servicio" ---------- */
+.pista-toque {
+  display: inline-flex; align-items: center; gap: 12px;
+  margin: 18px 0 0;
+  padding: 8px 16px 8px 8px;
+  border-radius: 999px;
+  background: rgba(212, 247, 90, .08);
+  border: 1px solid rgba(212, 247, 90, .25);
+  color: var(--crema); font-size: .92rem; font-weight: 500;
+}
+.pista-toque__icono {
+  position: relative;
+  display: grid; place-items: center;
+  width: 32px; height: 32px; flex: none;
+  border-radius: 50%;
+  background: var(--lima);
+}
+.pista-toque__icono svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: var(--noche); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+  animation: toque 1.8s ease-in-out infinite;
+}
+.pista-toque__icono::after {          /* onda que late, como un toque */
+  content: ""; position: absolute; inset: 0; border-radius: 50%;
+  border: 2px solid var(--lima);
+  animation: onda 1.8s ease-out infinite;
+}
+@keyframes toque { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(2px) scale(.9); } }
+@keyframes onda { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.9); opacity: 0; } }
+.solo-mouse { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .solo-mouse { display: inline; }
+  .solo-tactil { display: none; }
+}
+
+/* ---------- "+" de cada tarjeta (toda la tarjeta se puede tocar) ---------- */
+.servicio__abrir {
+  position: absolute; inset: 0; z-index: 2;
+  width: 100%; height: 100%;
+  border: 0; padding: 0; margin: 0;
+  background: transparent;
+  border-radius: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.servicio__abrir:focus-visible { outline: 3px solid var(--lima); outline-offset: 2px; }
+.servicio__mas {
+  position: absolute; top: 14px; right: 14px;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1.5px solid rgba(212, 247, 90, .55);
+  transition: transform .4s var(--curva), background-color .3s, border-color .3s;
+}
+.servicio__mas::before, .servicio__mas::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 12px; height: 1.8px; margin: -0.9px 0 0 -6px;
+  background: var(--lima); border-radius: 2px;
+  transition: background-color .3s;
+}
+.servicio__mas::after { transform: rotate(90deg); }
+.servicio:hover .servicio__mas,
+.servicio__abrir:focus-visible .servicio__mas { transform: rotate(90deg); background: var(--lima); border-color: var(--lima); }
+.servicio:hover .servicio__mas::before, .servicio:hover .servicio__mas::after,
+.servicio__abrir:focus-visible .servicio__mas::before, .servicio__abrir:focus-visible .servicio__mas::after { background: var(--noche); }
+.servicio:active { transform: scale(.98); }
+/* Al aparecer la sección, los "+" laten uno tras otro para invitar a tocar */
+.servicio.visible .servicio__mas { animation: invita 1.4s var(--curva) 2; animation-delay: .9s; }
+@keyframes invita {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 247, 90, 0); }
+  40% { box-shadow: 0 0 0 7px rgba(212, 247, 90, .25); transform: scale(1.12); }
+}
+
+/* ---------- Ficha de servicio ---------- */
+.detalle {
+  /* celular: hoja que sube desde abajo */
+  position: fixed;
+  inset: auto 0 0 0;
+  margin: 0;
+  width: 100%; max-width: 100%;
+  max-height: 88vh; max-height: 88dvh;
+  overflow-y: auto;
+  padding: 14px 22px calc(26px + env(safe-area-inset-bottom));
+  border: 1px solid #34332E; border-bottom: 0;
+  border-radius: 28px 28px 0 0;
+  background:
+    radial-gradient(80% 50% at 100% 0%, rgba(212, 247, 90, .12), transparent 70%),
+    var(--carbon);
+  color: var(--crema);
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, .6);
+  transform: translateY(100%);
+  transition: transform .55s var(--curva);
+}
+.detalle[open].abierto { transform: none; }
+.detalle::backdrop {
+  background: rgba(8, 8, 7, .65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity .4s ease;
+}
+.detalle.abierto::backdrop { opacity: 1; }
+
+.detalle__agarre { width: 44px; height: 5px; border-radius: 3px; background: #45433D; margin: 0 auto 16px; }
+.detalle__cerrar {
+  position: absolute; top: 16px; right: 16px;
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1.5px solid #45433D; background: var(--superficie);
+  color: var(--crema); cursor: pointer;
+  transition: border-color .25s, transform .3s var(--curva), color .25s;
+}
+.detalle__cerrar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.detalle__cerrar:hover { border-color: var(--lima); color: var(--lima); transform: rotate(90deg); }
+
+.detalle__icono svg {
+  width: 60px; height: 60px; padding: 14px;
+  border-radius: 18px;
+  background: var(--lima);
+  fill: none; stroke: var(--noche); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.detalle__etiqueta {
+  margin: 18px 0 6px;
+  font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--arena);
+}
+.detalle__titulo { font-size: clamp(1.7rem, 7vw, 2.3rem); margin: 0 0 14px; padding-right: 40px; }
+.detalle__cuerpo > p { color: #DDD8CE; font-size: 1.08rem; line-height: 1.6; margin: 0 0 18px; }
+.detalle__cuerpo ul { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 10px; }
+.detalle__cuerpo li {
+  position: relative;
+  padding: 12px 14px 12px 46px;
+  border-radius: 14px;
+  background: var(--superficie);
+  border: 1px solid var(--linea);
+  font-size: .98rem; line-height: 1.4;
+}
+.detalle__cuerpo li::before {           /* chulito lima */
+  content: ""; position: absolute; left: 14px; top: 50%;
+  width: 20px; height: 20px; margin-top: -10px; border-radius: 50%;
+  background: var(--lima) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230F0F0E' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 13px no-repeat;
+}
+.detalle__boton { width: 100%; }
+
+/* Animación del contenido: todo entra en cascada */
+.detalle__icono, .detalle__etiqueta, .detalle__titulo, .detalle__cuerpo > p, .detalle__cuerpo li, .detalle__boton {
+  opacity: 0; transform: translateY(14px);
+  transition: opacity .45s ease, transform .55s var(--curva);
+}
+.detalle__icono { transform: scale(.4) rotate(-20deg); }
+.detalle.abierto .detalle__icono,
+.detalle.abierto .detalle__etiqueta,
+.detalle.abierto .detalle__titulo,
+.detalle.abierto .detalle__cuerpo > p,
+.detalle.abierto .detalle__cuerpo li,
+.detalle.abierto .detalle__boton { opacity: 1; transform: none; }
+.detalle.abierto .detalle__icono { transition-delay: .15s; }
+.detalle.abierto .detalle__etiqueta { transition-delay: .22s; }
+.detalle.abierto .detalle__titulo { transition-delay: .27s; }
+.detalle.abierto .detalle__cuerpo > p { transition-delay: .34s; }
+.detalle.abierto .detalle__cuerpo li { transition-delay: calc(.42s + var(--i, 0) * 70ms); }
+.detalle.abierto .detalle__boton { transition-delay: calc(.5s + var(--n, 4) * 70ms); }
+
+@media (min-width: 768px) {
+  /* computador y tableta: tarjeta centrada */
+  .detalle {
+    inset: 0; margin: auto;
+    width: min(620px, 92vw); height: fit-content;
+    max-height: 88vh;
+    padding: 36px 40px 36px;
+    border-radius: 28px; border-bottom: 1px solid #34332E;
+    transform: translateY(30px) scale(.96);
+    opacity: 0;
+    transition: transform .5s var(--curva), opacity .35s ease;
+  }
+  .detalle[open].abierto { transform: none; opacity: 1; }
+  .detalle__agarre { display: none; }
+  .detalle__cuerpo ul { grid-template-columns: 1fr 1fr; }
+}
+
 /* ---------- 2. Proyectos ---------- */
 .proyectos { display: grid; gap: 18px; }
 
@@ -1065,7 +1242,10 @@ a { color: inherit; }
   .franja__pista { animation: none; flex-wrap: wrap; width: auto; justify-content: center; padding: 0 16px; }
   .franja--que .franja__pista > :nth-child(n+15) { display: none; }
   .franja--quien .franja__pista > :nth-child(n+11) { display: none; }
-  .sello svg, .mancha, .punto-vivo, .en-vivo__punto, .infinito__trazo, .wa-flotante.mostrar svg { animation: none; }
+  .sello svg, .mancha, .punto-vivo, .en-vivo__punto, .infinito__trazo, .wa-flotante.mostrar svg,
+  .pista-toque__icono svg, .pista-toque__icono::after, .servicio.visible .servicio__mas { animation: none; }
+  .detalle, .detalle[open].abierto { transform: none; opacity: 1; }
+  .detalle__icono, .detalle__etiqueta, .detalle__titulo, .detalle__cuerpo > p, .detalle__cuerpo li, .detalle__boton { opacity: 1; transform: none; }
   .menu-movil, .menu-movil.abierto { clip-path: none; transition: visibility 0s; }
   .js .sobre__media::before { display: none; }
   .sobre__media img { transform: none; }

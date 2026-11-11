@@ -182,6 +182,13 @@
           <p class="etiqueta"><span class="num">01</span> Servicios</p>
           <h2 class="titulo-animado">Lo que puedo <em>hacer por ti</em></h2>
           <p class="seccion__intro">Todo lo que tu negocio necesita, en un solo lugar.</p>
+          <p class="pista-toque">
+            <span class="pista-toque__icono" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a6 6 0 0 1-4.6-2.1L4.6 15.6a1.6 1.6 0 0 1 2.3-2.2L9 15"/></svg>
+            </span>
+            <span class="solo-tactil">Toca un servicio para ver de qué se trata</span>
+            <span class="solo-mouse">Haz clic en un servicio para ver de qué se trata</span>
+          </p>
         </header>
 
         <ul class="servicios">
@@ -191,13 +198,15 @@
               <h3>Páginas web</h3>
               <p>Sitios que se ven increíbles y hacen que te escriban.</p>
             </div>
+            <button type="button" class="servicio__abrir" data-servicio="paginas" aria-haspopup="dialog" aria-label="Ver más sobre Páginas web"><span class="servicio__mas" aria-hidden="true"></span></button>
           </li>
           <li class="servicio revelar">
-            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18M3 12h18"/></svg>
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/></svg>
             <div>
               <h3>Branding e identidad de marca</h3>
               <p>Logo, colores y estilo: una marca que se recuerda.</p>
             </div>
+            <button type="button" class="servicio__abrir" data-servicio="branding" aria-haspopup="dialog" aria-label="Ver más sobre Branding e identidad de marca"><span class="servicio__mas" aria-hidden="true"></span></button>
           </li>
           <li class="servicio revelar">
             <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.6-4.5M4 4v3h3M4 13a8 8 0 0 0 14.6 4.5M20 20v-3h-3"/></svg>
@@ -205,6 +214,7 @@
               <h3>Rebranding</h3>
               <p>Renuevo tu marca para que luzca como tu negocio hoy.</p>
             </div>
+            <button type="button" class="servicio__abrir" data-servicio="rebranding" aria-haspopup="dialog" aria-label="Ver más sobre Rebranding"><span class="servicio__mas" aria-hidden="true"></span></button>
           </li>
           <li class="servicio revelar">
             <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.5-.8 1.5-1.6 0-1.1-.9-1.4-.9-2.4 0-.9.7-1.5 1.6-1.5H17a4 4 0 0 0 4-4c0-4.7-4-8.5-9-8.5z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>
@@ -212,6 +222,7 @@
               <h3>Diseño gráfico</h3>
               <p>Piezas para redes, menús, avisos y todo lo visual.</p>
             </div>
+            <button type="button" class="servicio__abrir" data-servicio="diseno" aria-haspopup="dialog" aria-label="Ver más sobre Diseño gráfico"><span class="servicio__mas" aria-hidden="true"></span></button>
           </li>
           <li class="servicio revelar">
             <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>
@@ -219,6 +230,7 @@
               <h3>Automatizaciones</h3>
               <p>Tareas repetitivas que se hacen solas para que ganes tiempo.</p>
             </div>
+            <button type="button" class="servicio__abrir" data-servicio="automatizaciones" aria-haspopup="dialog" aria-label="Ver más sobre Automatizaciones"><span class="servicio__mas" aria-hidden="true"></span></button>
           </li>
           <li class="servicio revelar">
             <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
@@ -226,6 +238,7 @@
               <h3>Soluciones con IA</h3>
               <p>Herramientas inteligentes hechas a la medida de tu negocio.</p>
             </div>
+            <button type="button" class="servicio__abrir" data-servicio="ia" aria-haspopup="dialog" aria-label="Ver más sobre Soluciones con IA"><span class="servicio__mas" aria-hidden="true"></span></button>
           </li>
           <li class="servicio revelar">
             <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>
@@ -233,6 +246,7 @@
               <h3>Estrategia digital</h3>
               <p>Un plan claro para crecer y llegar a más clientes.</p>
             </div>
+            <button type="button" class="servicio__abrir" data-servicio="estrategia" aria-haspopup="dialog" aria-label="Ver más sobre Estrategia digital"><span class="servicio__mas" aria-hidden="true"></span></button>
           </li>
 
           <!-- Tarjeta "sin techo": infinito animado + palabras que cambian solas -->
@@ -443,6 +457,100 @@
       <p>© <span id="anio">2026</span> Jerónimo Grajales Pérez · Manizales, Caldas</p>
     </div>
   </footer>
+
+  <!-- ===== Ficha de servicio (se abre al tocar una tarjeta) ===== -->
+  <dialog class="detalle" aria-labelledby="detalle-titulo">
+    <div class="detalle__agarre" aria-hidden="true"></div>
+    <button type="button" class="detalle__cerrar" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <div class="detalle__cabeza">
+      <div class="detalle__icono"></div>
+      <p class="detalle__etiqueta">Servicio</p>
+      <h3 class="detalle__titulo" id="detalle-titulo"></h3>
+    </div>
+    <div class="detalle__cuerpo"></div>
+    <a class="boton boton--grande detalle__boton" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+      <svg class="icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>
+      <span class="detalle__boton-texto">Hablemos de tu proyecto</span>
+    </a>
+  </dialog>
+
+  <!-- ==========================================================
+       TEXTOS DE CADA FICHA DE SERVICIO
+       Para cambiar lo que dice una ficha, edita el texto aquí.
+       data-boton = texto del botón de WhatsApp de esa ficha.
+       ========================================================== -->
+  <template id="detalle-paginas" data-boton="Quiero mi página web">
+    <p>Diseño y creo tu página desde cero, pensada para que tus clientes te encuentren, entiendan rápido lo que ofreces y te escriban con un solo toque.</p>
+    <ul>
+      <li>Diseño único, hecho a la medida de tu negocio</li>
+      <li>Se ve perfecta en celular y en computador</li>
+      <li>Botones directos a tu WhatsApp y redes sociales</li>
+      <li>Carta, catálogo o portafolio, según lo que necesites</li>
+      <li>Te acompaño hasta dejarla publicada en internet</li>
+    </ul>
+  </template>
+
+  <template id="detalle-branding" data-boton="Quiero crear mi marca">
+    <p>Creo la personalidad visual de tu negocio para que la gente te reconozca, te recuerde y confíe en ti desde el primer vistazo.</p>
+    <ul>
+      <li>Logo y sus versiones para cada uso</li>
+      <li>Paleta de colores y tipografías</li>
+      <li>Estilo visual coherente en todo lo que publiques</li>
+      <li>Guía sencilla para que tu marca siempre se vea igual</li>
+    </ul>
+  </template>
+
+  <template id="detalle-rebranding" data-boton="Quiero renovar mi marca">
+    <p>Si tu marca ya no refleja lo que tu negocio es hoy, la renuevo conservando lo que tus clientes ya reconocen y quieren de ti.</p>
+    <ul>
+      <li>Revisamos juntos tu marca actual</li>
+      <li>Logo y estilo actualizados, más modernos</li>
+      <li>Una transición ordenada en tus redes y piezas</li>
+      <li>Una imagen más profesional, sin perder tu esencia</li>
+    </ul>
+  </template>
+
+  <template id="detalle-diseno" data-boton="Quiero mis diseños">
+    <p>Diseño las piezas visuales que tu negocio necesita para comunicar con estilo, en redes y fuera de ellas.</p>
+    <ul>
+      <li>Publicaciones e historias para redes sociales</li>
+      <li>Menús y cartas</li>
+      <li>Volantes, avisos y pendones</li>
+      <li>Tarjetas de presentación</li>
+    </ul>
+  </template>
+
+  <template id="detalle-automatizaciones" data-boton="Quiero automatizar mi negocio">
+    <p>Hago que las tareas repetitivas de tu negocio se hagan solas, para que tú ganes tiempo y te enfoques en lo importante.</p>
+    <ul>
+      <li>Respuestas automáticas a las preguntas frecuentes</li>
+      <li>Formularios que guardan la información en orden</li>
+      <li>Recordatorios y avisos automáticos</li>
+      <li>Conexión entre las herramientas que ya usas</li>
+    </ul>
+  </template>
+
+  <template id="detalle-ia" data-boton="Quiero una solución con IA">
+    <p>Uso la inteligencia artificial para crear herramientas a la medida de tu negocio, que te ahorran tiempo y te ayudan a atender mejor.</p>
+    <ul>
+      <li>Asistentes que responden a tus clientes</li>
+      <li>Textos y contenido en mucho menos tiempo</li>
+      <li>Información organizada para decidir mejor</li>
+      <li>Ideas nuevas: si lo imaginas, lo exploramos juntos</li>
+    </ul>
+  </template>
+
+  <template id="detalle-estrategia" data-boton="Quiero un plan para crecer">
+    <p>Te ayudo a definir un plan claro para que tu negocio crezca en internet y llegue a más personas, con pasos fáciles de seguir.</p>
+    <ul>
+      <li>Revisión de tu presencia en redes e internet</li>
+      <li>Plan de contenido para tus redes</li>
+      <li>Mensajes que conectan con tu público</li>
+      <li>Acciones concretas para empezar desde ya</li>
+    </ul>
+  </template>
 
   <!-- Botón flotante de WhatsApp (celular): aparece al pasar la portada -->
   <a class="wa-flotante js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener" aria-label="Escríbeme por WhatsApp">

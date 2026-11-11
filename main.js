@@ -278,6 +278,66 @@
     palabra.textContent = 'lo que se te ocurra';
   }
 
-  // 10. Año actual en el pie
+  // 10. Fichas de servicio: al tocar una tarjeta se abre su explicación
+  var ficha = document.querySelector('.detalle');
+  if (ficha && typeof ficha.showModal === 'function') {
+    var fichaIcono = ficha.querySelector('.detalle__icono');
+    var fichaTitulo = ficha.querySelector('.detalle__titulo');
+    var fichaCuerpo = ficha.querySelector('.detalle__cuerpo');
+    var fichaBoton = ficha.querySelector('.detalle__boton');
+    var fichaBotonTexto = ficha.querySelector('.detalle__boton-texto');
+    var botonOrigen = null;
+
+    var abrirFicha = function (boton) {
+      var tarjeta = boton.closest('.servicio');
+      var plantilla = document.getElementById('detalle-' + boton.dataset.servicio);
+      if (!plantilla) return;
+      var nombre = tarjeta.querySelector('h3').textContent;
+
+      // llenar la ficha con el ícono, el nombre y el texto de ese servicio
+      fichaIcono.innerHTML = '';
+      fichaIcono.appendChild(tarjeta.querySelector('.servicio__icono').cloneNode(true));
+      fichaTitulo.textContent = nombre;
+      fichaCuerpo.innerHTML = '';
+      fichaCuerpo.appendChild(plantilla.content.cloneNode(true));
+      var items = fichaCuerpo.querySelectorAll('li');
+      items.forEach(function (li, i) { li.style.setProperty('--i', i); });
+      fichaBoton.style.setProperty('--n', items.length);
+      fichaBotonTexto.textContent = plantilla.dataset.boton || 'Hablemos de tu proyecto';
+      fichaBoton.href = 'https://wa.me/573196150221?text=' +
+        encodeURIComponent('Hola Jerónimo, vi tu portafolio y me interesa: ' + nombre + '.');
+
+      botonOrigen = boton;
+      ficha.scrollTop = 0;
+      ficha.showModal();
+      raiz.style.overflow = 'hidden';
+      requestAnimationFrame(function () { requestAnimationFrame(function () { ficha.classList.add('abierto'); }); });
+    };
+
+    var cerrarFicha = function () {
+      if (!ficha.open) return;
+      ficha.classList.remove('abierto');
+      setTimeout(function () {
+        ficha.close();
+        raiz.style.overflow = '';
+        if (botonOrigen) botonOrigen.focus({ preventScroll: true });
+      }, sinMovimiento ? 0 : 380);
+    };
+
+    document.querySelectorAll('.servicio__abrir').forEach(function (b) {
+      b.addEventListener('click', function () { abrirFicha(b); });
+    });
+    ficha.querySelector('.detalle__cerrar').addEventListener('click', cerrarFicha);
+    // tocar fuera de la ficha (en el fondo oscuro) también la cierra
+    ficha.addEventListener('click', function (e) {
+      var r = ficha.getBoundingClientRect();
+      var fuera = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+      if (fuera) cerrarFicha();
+    });
+    // la tecla Esc cierra con la misma animación
+    ficha.addEventListener('cancel', function (e) { e.preventDefault(); cerrarFicha(); });
+  }
+
+  // 11. Año actual en el pie
   document.getElementById('anio').textContent = new Date().getFullYear();
 })();
