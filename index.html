@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-  <title>Grajalessd | Páginas web, automatización y estrategia digital</title>
-  <meta name="description" content="Tú traes la idea, yo la hago realidad: páginas web, automatizaciones, estrategias y soluciones con IA para tu negocio. Desde Manizales para donde estés. Cuéntame tu idea y recibe una propuesta sin compromiso.">
+  <title>Grajalessd | Diseño web, identidad de marca y automatización</title>
+  <meta name="description" content="Tú traes la idea, yo la hago realidad: páginas web, identidad de marca, rebranding, diseño, automatizaciones y soluciones con IA para tu negocio. Desde Manizales para donde estés. Cuéntame tu idea y recibe una propuesta sin compromiso.">
   <meta name="theme-color" content="#0F0F0E">
 
   <!-- ===== Open Graph (vista previa al compartir por WhatsApp) =====
@@ -16,7 +16,7 @@
   <meta property="og:locale" content="es_CO">
   <meta property="og:site_name" content="Grajalessd">
   <meta property="og:title" content="Grajalessd | Tú traes la idea, yo la hago realidad">
-  <meta property="og:description" content="Páginas web, automatizaciones, estrategias y soluciones con IA para tu negocio. Cuéntame tu idea y te envío una propuesta sin compromiso.">
+  <meta property="og:description" content="Páginas web, identidad de marca, rebranding, automatizaciones y soluciones con IA para tu negocio. Cuéntame tu idea y te envío una propuesta sin compromiso.">
   <meta property="og:url" content="https://jeronimograjales.netlify.app/">
   <meta property="og:image" content="https://jeronimograjales.netlify.app/img/og-imagen.jpg">
   <meta property="og:image:width" content="1200">
@@ -29,9 +29,31 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    document.documentElement.classList.add('js');
+    // Animación de entrada: solo la primera vez por visita y nunca con "reducir movimiento"
+    try {
+      if (!sessionStorage.getItem('intro-vista') && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('con-intro');
+        sessionStorage.setItem('intro-vista', '1');
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body>
+
+  <!-- ===== Animación de entrada (logo motion) ===== -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__lima"></div>
+    <div class="intro__panel">
+      <div class="intro__logo">
+        <span class="intro__letras">
+          <span style="--l:0">g</span><span style="--l:1">r</span><span style="--l:2">a</span><span style="--l:3">j</span><span style="--l:4">a</span><span style="--l:5">l</span><span style="--l:6">e</span><span style="--l:7">s</span><span style="--l:8">s</span><span style="--l:9">d</span>
+        </span><span class="intro__punto"></span>
+      </div>
+      <div class="intro__barra"><span></span></div>
+    </div>
+  </div>
 
   <a class="saltar" href="#contenido">Saltar al contenido</a>
   <div class="progreso" aria-hidden="true"></div>
@@ -41,10 +63,11 @@
     <div class="contenedor encabezado__fila">
       <a class="marca" href="#inicio" aria-label="Grajalessd, inicio">grajalessd<i>.</i></a>
       <nav class="menu" aria-label="Secciones">
+        <a href="#servicios">Servicios</a>
         <a href="#proyectos">Proyectos</a>
         <a href="#sobre-mi">Sobre mí</a>
-        <a href="#por-que">¿Por qué trabajar conmigo?</a>
-        <a href="#como-trabajamos">¿Cómo trabajamos?</a>
+        <a href="#como-trabajamos">Cómo trabajamos</a>
+        <a href="#contacto">Contacto</a>
       </nav>
       <div class="encabezado__acciones">
         <a class="boton boton--pequeno js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">
@@ -61,10 +84,10 @@
   <div class="menu-movil" id="menu-movil" inert>
     <nav class="contenedor menu-movil__nav" aria-label="Secciones">
       <ol class="menu-movil__lista">
-        <li style="--i:0"><a href="#proyectos"><span class="menu-movil__num">01</span> Proyectos</a></li>
-        <li style="--i:1"><a href="#sobre-mi"><span class="menu-movil__num">02</span> Sobre mí</a></li>
-        <li style="--i:2"><a href="#por-que"><span class="menu-movil__num">03</span> ¿Por qué trabajar conmigo?</a></li>
-        <li style="--i:3"><a href="#como-trabajamos"><span class="menu-movil__num">04</span> ¿Cómo trabajamos?</a></li>
+        <li style="--i:0"><a href="#servicios"><span class="menu-movil__num">01</span> Servicios</a></li>
+        <li style="--i:1"><a href="#proyectos"><span class="menu-movil__num">02</span> Proyectos</a></li>
+        <li style="--i:2"><a href="#sobre-mi"><span class="menu-movil__num">03</span> Sobre mí</a></li>
+        <li style="--i:3"><a href="#como-trabajamos"><span class="menu-movil__num">04</span> Cómo trabajamos</a></li>
         <li style="--i:4"><a href="#contacto"><span class="menu-movil__num">05</span> Contacto</a></li>
       </ol>
       <div class="menu-movil__pie" style="--i:5">
@@ -97,7 +120,7 @@
       </div>
 
       <div class="contenedor portada__contenido">
-        <p class="etiqueta entrar" style="--d:0"><span class="punto-lima" aria-hidden="true"></span> Diseño web · Automatización · Estrategia · IA</p>
+        <p class="etiqueta entrar" style="--d:0"><span class="punto-lima" aria-hidden="true"></span> Diseño web · Branding · Automatización · IA</p>
 
         <h1 class="portada__titulo">
           <span class="visualmente-oculto">Jerónimo Grajales: diseño web, automatización y estrategia digital</span>
@@ -107,7 +130,7 @@
 
         <p class="portada__frase entrar" style="--d:3">
           Tú traes la idea, <em>yo la hago realidad.</em>
-          Páginas web, automatizaciones, estrategias y soluciones con IA: todo lo que tu negocio necesita para crecer, en un solo lugar.
+          Páginas web, identidad de marca, diseño, automatizaciones y soluciones con IA: todo lo que tu negocio necesita para crecer, en un solo lugar.
         </p>
 
         <div class="botones entrar" style="--d:4">
@@ -128,12 +151,12 @@
         <span class="sello__centro">✦</span>
       </div>
 
-      <a class="bajar" href="#proyectos" aria-label="Bajar a proyectos"><span></span></a>
+      <a class="bajar" href="#servicios" aria-label="Bajar a servicios"><span></span></a>
     </section>
 
     <!-- ===== Franjas cruzadas: qué hago (lima) y para quién (crema) ===== -->
     <div class="franjas">
-      <p class="visualmente-oculto">Lo que hago: páginas web, automatizaciones, estrategias digitales y soluciones con IA. Para negocios, emprendedores, marcas personales, profesionales y empresas.</p>
+      <p class="visualmente-oculto">Lo que hago: páginas web, identidad de marca, rebranding, diseño gráfico, automatizaciones, estrategias digitales y soluciones con IA. Para negocios, emprendedores, marcas personales, profesionales y empresas.</p>
       <div class="franja franja--quien" aria-hidden="true">
         <div class="franja__pista">
           <span>Para negocios</span><b>✦</b><span>Emprendedores</span><b>✦</b><span>Marcas personales</span><b>✦</b><span>Profesionales</span><b>✦</b><span>Empresas</span><b>✦</b>
@@ -144,19 +167,98 @@
       </div>
       <div class="franja franja--que" aria-hidden="true">
         <div class="franja__pista">
-          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
-          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
-          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
-          <span>Páginas web</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+          <span>Páginas web</span><b>✦</b><span>Identidad de marca</span><b>✦</b><span>Rebranding</span><b>✦</b><span>Diseño gráfico</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+          <span>Páginas web</span><b>✦</b><span>Identidad de marca</span><b>✦</b><span>Rebranding</span><b>✦</b><span>Diseño gráfico</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+          <span>Páginas web</span><b>✦</b><span>Identidad de marca</span><b>✦</b><span>Rebranding</span><b>✦</b><span>Diseño gráfico</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
+          <span>Páginas web</span><b>✦</b><span>Identidad de marca</span><b>✦</b><span>Rebranding</span><b>✦</b><span>Diseño gráfico</span><b>✦</b><span>Automatizaciones</span><b>✦</b><span>Estrategias digitales</span><b>✦</b><span>Soluciones con IA</span><b>✦</b>
         </div>
       </div>
     </div>
+
+    <!-- ===== Servicios: todo lo que puedo hacer, de un vistazo ===== -->
+    <section class="seccion" id="servicios">
+      <div class="contenedor">
+        <header class="seccion__cabeza revelar">
+          <p class="etiqueta"><span class="num">01</span> Servicios</p>
+          <h2 class="titulo-animado">Lo que puedo <em>hacer por ti</em></h2>
+          <p class="seccion__intro">Todo lo que tu negocio necesita, en un solo lugar.</p>
+        </header>
+
+        <ul class="servicios">
+          <li class="servicio revelar">
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            <div>
+              <h3>Páginas web</h3>
+              <p>Sitios que se ven increíbles y hacen que te escriban.</p>
+            </div>
+          </li>
+          <li class="servicio revelar">
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18M3 12h18"/></svg>
+            <div>
+              <h3>Branding e identidad de marca</h3>
+              <p>Logo, colores y estilo: una marca que se recuerda.</p>
+            </div>
+          </li>
+          <li class="servicio revelar">
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.6-4.5M4 4v3h3M4 13a8 8 0 0 0 14.6 4.5M20 20v-3h-3"/></svg>
+            <div>
+              <h3>Rebranding</h3>
+              <p>Renuevo tu marca para que luzca como tu negocio hoy.</p>
+            </div>
+          </li>
+          <li class="servicio revelar">
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.5-.8 1.5-1.6 0-1.1-.9-1.4-.9-2.4 0-.9.7-1.5 1.6-1.5H17a4 4 0 0 0 4-4c0-4.7-4-8.5-9-8.5z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>
+            <div>
+              <h3>Diseño gráfico</h3>
+              <p>Piezas para redes, menús, avisos y todo lo visual.</p>
+            </div>
+          </li>
+          <li class="servicio revelar">
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 3L5 14h6l-1 7 8-11h-6z"/></svg>
+            <div>
+              <h3>Automatizaciones</h3>
+              <p>Tareas repetitivas que se hacen solas para que ganes tiempo.</p>
+            </div>
+          </li>
+          <li class="servicio revelar">
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+            <div>
+              <h3>Soluciones con IA</h3>
+              <p>Herramientas inteligentes hechas a la medida de tu negocio.</p>
+            </div>
+          </li>
+          <li class="servicio revelar">
+            <svg class="servicio__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>
+            <div>
+              <h3>Estrategia digital</h3>
+              <p>Un plan claro para crecer y llegar a más clientes.</p>
+            </div>
+          </li>
+
+          <!-- Tarjeta "sin techo": infinito animado + palabras que cambian solas -->
+          <li class="servicio servicio--infinito revelar">
+            <svg class="infinito" viewBox="0 0 120 50" aria-hidden="true">
+              <path class="infinito__base" d="M60 25 C 50 8, 26 8, 26 25 C 26 42, 50 42, 60 25 C 70 8, 94 8, 94 25 C 94 42, 70 42, 60 25 Z"/>
+              <path class="infinito__trazo" d="M60 25 C 50 8, 26 8, 26 25 C 26 42, 50 42, 60 25 C 70 8, 94 8, 94 25 C 94 42, 70 42, 60 25 Z"/>
+            </svg>
+            <div>
+              <h3>Y también…</h3>
+              <p class="imagina" aria-live="off">
+                <span class="imagina__palabra js-imagina">una tienda en línea</span>
+              </p>
+              <p class="imagina__cierre">No hay techo: <strong>si lo puedes imaginar, lo hacemos.</strong></p>
+              <a class="enlace-flecha js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener">Cuéntame qué imaginas <span aria-hidden="true">→</span></a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
 
     <!-- ===== 2. Proyectos ===== -->
     <section class="seccion" id="proyectos">
       <div class="contenedor">
         <header class="seccion__cabeza revelar">
-          <p class="etiqueta"><span class="num">01</span> Proyectos</p>
+          <p class="etiqueta"><span class="num">02</span> Proyectos</p>
           <h2 class="titulo-animado">Mira lo que <em>puedo crear</em></h2>
           <p class="seccion__intro">Páginas que atrapan a primera vista y llevan a tu cliente directo a escribirte. Toca las pestañas y mira cómo se ve en computador y en celular.</p>
         </header>
@@ -207,7 +309,7 @@
                   <p class="proyecto__tipo">Restaurante · Manizales</p>
                 </div>
                 <div>
-                  <p class="proyecto__gancho">Tu cliente entra, se antoja, arma su hamburguesa y te hace el pedido por WhatsApp. <strong>En un par de toques, sin llamadas ni enredos.</strong></p>
+                  <p class="proyecto__gancho">Tu cliente entra, se antoja, arma su hamburguesa y te hace el pedido por WhatsApp. <strong>En un par de toques, sin llamadas ni complicaciones.</strong></p>
                   <ul class="chips" aria-label="Qué incluye">
                     <li>Carta que antoja</li>
                     <li>Arma tu burger</li>
@@ -231,7 +333,7 @@
             <span class="proximo__mas" aria-hidden="true">+</span>
             <span>
               <span class="proximo__titulo">El próximo puede ser <em>el tuyo</em></span>
-              <span class="proximo__sub">Una página, una automatización o una idea nueva para tu negocio: cuéntamela y te muestro cómo hacerla realidad.</span>
+              <span class="proximo__sub">Una página, una marca, una automatización o una idea nueva para tu negocio: cuéntamela y te muestro cómo hacerla realidad.</span>
             </span>
             <span class="proximo__flecha" aria-hidden="true">→</span>
           </a>
@@ -254,63 +356,20 @@
         <div class="sobre-mi__espacio" aria-hidden="true"></div>
 
         <div class="sobre-mi__texto revelar">
-          <p class="etiqueta"><span class="num">02</span> Sobre mí</p>
+          <p class="etiqueta"><span class="num">03</span> Sobre mí</p>
           <h2 class="titulo-animado">Hola, soy <em>Jerónimo</em></h2>
-          <p class="destacado">Diseño páginas web, automatizo procesos y creo soluciones con inteligencia artificial para que tu negocio <em>trabaje mejor.</em></p>
-          <p>Estudio Administración de Empresas en la Universidad de Manizales. Por eso no solo pienso en que tu página se vea bonita: pienso en lo que tu negocio necesita para crecer.</p>
-          <p>Amo crear y exprimir cada idea al máximo. Con la IA de mi lado, la lista de lo que podemos hacer juntos no tiene techo: <strong>si lo puedes imaginar, lo podemos construir.</strong></p>        </div>
+          <p class="destacado">Tengo 22 años y llevo 3 creando contenido en redes sociales. Sé lo que hace que algo <em>llame la atención.</em></p>
+          <p>Ser creador de contenido en TikTok me enseñó a entender a la gente, a comunicar con claridad y a conectar con el público. Hoy llevo esa experiencia más allá: diseño, creo y automatizo lo que tu negocio necesite para crecer.</p>
+          <p>Estudio Administración de Empresas en la Universidad de Manizales para seguir creciendo y abrir nuevas oportunidades. Y me apoyo en la inteligencia artificial para llevar cada idea mucho más lejos: <strong>si lo puedes imaginar, lo construimos.</strong></p>        </div>
       </div>
     </section>
 
-    <!-- ===== 4. ¿Por qué trabajar conmigo? ===== -->
-    <section class="seccion" id="por-que">
+    <!-- ===== 4. Cómo trabajamos (cada paso lleva su beneficio) ===== -->
+    <section class="seccion" id="como-trabajamos">
       <div class="contenedor">
         <header class="seccion__cabeza revelar">
-          <p class="etiqueta"><span class="num">03</span> La diferencia</p>
-          <h2 class="titulo-animado">¿Por qué trabajar <em>conmigo?</em></h2>
-        </header>
-
-        <ul class="bento">
-          <li class="tarjeta tarjeta--acento tarjeta--grande revelar">
-            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>
-            <h3>Me escribes, te respondo. Así de simple.</h3>
-            <p>Hablamos directo por WhatsApp, con respuestas rápidas para que tu proyecto avance sin pausas.</p>
-          </li>
-          <li class="tarjeta revelar">
-            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 17.5h2"/></svg>
-            <h3>Ves tu proyecto crecer en tiempo real</h3>
-            <p>Te mando avances y bocetos al momento, por mensaje o con un enlace que abres desde tu celular.</p>
-          </li>
-          <li class="tarjeta revelar">
-            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13 7l4 4"/></svg>
-            <h3>¿Cambiaste de idea? Ajustes cuando los necesites</h3>
-            <p>Ajustamos y mejoramos sobre la marcha, no cuando ya esté todo hecho.</p>
-          </li>
-          <li class="tarjeta revelar">
-            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>
-            <h3>Siempre sabrás en qué vamos</h3>
-            <p>Si quieres, te mantengo al tanto de cada paso. Cero sorpresas.</p>
-          </li>
-          <li class="tarjeta revelar">
-            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-            <h3>¿Prefieres una reunión? La cuadramos</h3>
-            <p>Si te queda mejor hablarlo con calma, nos reunimos y lo revisamos juntos.</p>
-          </li>
-          <li class="tarjeta tarjeta--coral tarjeta--ancha revelar">
-            <svg class="tarjeta__icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"/></svg>
-            <h3>Creatividad que se nota, eficiencia que se siente</h3>
-            <p>Lo que hagamos no se va a parecer a nada más, y va a estar listo sin vueltas.</p>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- ===== 5. ¿Cómo trabajamos? ===== -->
-    <section class="seccion seccion--clara" id="como-trabajamos">
-      <div class="contenedor">
-        <header class="seccion__cabeza revelar">
-          <p class="etiqueta"><span class="num">04</span> El proceso</p>
-          <h2 class="titulo-animado">¿Cómo <em>trabajamos?</em></h2>
+          <p class="etiqueta"><span class="num">04</span> Cómo trabajamos</p>
+          <h2 class="titulo-animado">Así de fácil es <em>trabajar conmigo</em></h2>
           <p class="seccion__intro">Cuatro pasos, cero complicaciones. Tú me cuentas, yo me encargo del resto.</p>
         </header>
 
@@ -318,29 +377,29 @@
           <li class="paso revelar">
             <span class="paso__num" aria-hidden="true">01</span>
             <div>
-              <h3>Me cuentas tu idea</h3>
-              <p>Con un mensaje basta. Me cuentas qué haces y qué quieres lograr.</p>
+              <h3>Me escribes</h3>
+              <p>Te respondo rápido por WhatsApp. Y si prefieres una reunión, la cuadramos.</p>
             </div>
           </li>
           <li class="paso revelar">
             <span class="paso__num" aria-hidden="true">02</span>
             <div>
-              <h3>Te envío un boceto</h3>
-              <p>Ves la primera versión antes de lo que imaginas, directo en tu celular.</p>
+              <h3>Te muestro un boceto</h3>
+              <p>Ves tu proyecto crecer en tiempo real, directo en tu celular.</p>
             </div>
           </li>
           <li class="paso revelar">
             <span class="paso__num" aria-hidden="true">03</span>
             <div>
-              <h3>La pulimos juntos</h3>
-              <p>Cada detalle se ajusta hasta que digas «esto es justo lo que quería».</p>
+              <h3>Lo ajustamos juntos</h3>
+              <p>¿Cambiaste de idea? Ajustes cuando los necesites, hasta que digas «esto es justo lo que quería».</p>
             </div>
           </li>
           <li class="paso revelar">
             <span class="paso__num" aria-hidden="true">04</span>
             <div>
-              <h3>¡Sale al aire!</h3>
-              <p>Tu proyecto queda listo y funcionando, para que lo disfrutes desde el primer día.</p>
+              <h3>Tu proyecto, listo</h3>
+              <p>Creatividad que se nota y eficiencia que se siente: un resultado único, hecho con el cuidado que tu negocio merece.</p>
             </div>
           </li>
         </ol>
@@ -384,6 +443,12 @@
       <p>© <span id="anio">2026</span> Jerónimo Grajales Pérez · Manizales, Caldas</p>
     </div>
   </footer>
+
+  <!-- Botón flotante de WhatsApp (celular): aparece al pasar la portada -->
+  <a class="wa-flotante js-whatsapp" href="https://wa.me/573196150221" target="_blank" rel="noopener" aria-label="Escríbeme por WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20z"/></svg>
+    <span class="wa-flotante__texto">Escríbeme</span>
+  </a>
 
   <script src="main.js" defer></script>
 </body>

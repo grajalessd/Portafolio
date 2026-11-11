@@ -4,6 +4,11 @@
   var punteroFino = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var raiz = document.documentElement;
 
+  // 0. Seguro: la animación de entrada siempre desaparece, pase lo que pase
+  if (raiz.classList.contains('con-intro')) {
+    setTimeout(function () { raiz.classList.add('intro-lista'); }, 2700);
+  }
+
   // 1. Mensaje prellenado de WhatsApp en todos los botones
   var mensaje = 'Hola Jerónimo, vi tu portafolio y quiero contarte una idea.';
   var enlaceWa = 'https://wa.me/573196150221?text=' + encodeURIComponent(mensaje);
@@ -64,6 +69,8 @@
   var portada = document.querySelector('.portada');
   var media = document.querySelector('.portada__media');
   var vitrinas = document.querySelectorAll('.proyecto__vitrina');
+  var waFlotante = document.querySelector('.wa-flotante');
+  var contacto = document.getElementById('contacto');
   var sobre = document.querySelector('.sobre');
   var sobreFoto = document.querySelector('.sobre__media img');
   var pasos = document.querySelector('.pasos');
@@ -109,9 +116,14 @@
     var alto = document.documentElement.scrollHeight - vh;
 
     // barra de progreso y encabezado
-    raiz.style.setProperty('--p', alto > 0 ? (y / alto).toFixed(4) : 0);
     document.querySelector('.progreso').style.setProperty('--p', alto > 0 ? (y / alto).toFixed(4) : 0);
     encabezado.classList.toggle('con-fondo', y > 20);
+
+    // botón flotante: aparece al pasar la portada y se esconde en la sección de contacto
+    if (waFlotante) {
+      var enContacto = contacto && contacto.getBoundingClientRect().top < vh * 0.85;
+      waFlotante.classList.toggle('mostrar', y > portada.offsetHeight * 0.6 && !enContacto);
+    }
 
     if (!sinMovimiento) {
       // foto de portada: se aleja y se desvanece al bajar
@@ -173,7 +185,7 @@
       fondo.style.setProperty('--my', (e.clientY - r.top) + 'px');
     });
 
-    document.querySelectorAll('.tarjeta').forEach(function (t) {
+    document.querySelectorAll('.tarjeta, .servicio').forEach(function (t) {
       t.addEventListener('pointermove', function (e) {
         var r = t.getBoundingClientRect();
         t.style.setProperty('--mx', (e.clientX - r.left) + 'px');
@@ -204,6 +216,7 @@
       if (abrir) { menuMovil.removeAttribute('inert'); } else { menuMovil.setAttribute('inert', ''); }
       raiz.style.overflow = abrir ? 'hidden' : '';         // la página no se mueve detrás del menú
       encabezado.classList.toggle('menu-abierto', abrir);
+      raiz.classList.toggle('menu-abierto-html', abrir);
     };
     botonMenu.addEventListener('click', function () {
       abrirMenu(botonMenu.getAttribute('aria-expanded') !== 'true');
@@ -229,12 +242,42 @@
         enlacesMenu.forEach(function (a) { a.classList.toggle('activa', a.getAttribute('href') === id); });
       });
     }, { rootMargin: '-45% 0px -50% 0px' });
-    ['proyectos', 'sobre-mi', 'por-que', 'como-trabajamos', 'contacto', 'inicio'].forEach(function (id) {
+    ['servicios', 'proyectos', 'sobre-mi', 'como-trabajamos', 'contacto', 'inicio'].forEach(function (id) {
       var s = document.getElementById(id);
       if (s) marcarActiva.observe(s);
     });
   }
 
-  // 9. Año actual en el pie
+  // 9. "Y también…": ideas que van cambiando solas (no hay techo)
+  var palabra = document.querySelector('.js-imagina');
+  if (palabra && !sinMovimiento) {
+    var ideas = [
+      'una tienda en línea',
+      'un sistema de reservas',
+      'un chatbot para tu negocio',
+      'un catálogo digital',
+      'tu menú con código QR',
+      'piezas para tus redes',
+      'un formulario que trabaja solo',
+      'lo que se te ocurra'
+    ];
+    var indice = 0;
+    setInterval(function () {
+      if (document.hidden) return;
+      palabra.classList.add('sale');
+      setTimeout(function () {
+        indice = (indice + 1) % ideas.length;
+        palabra.textContent = ideas[indice];
+        palabra.classList.remove('sale');
+        palabra.classList.add('entra');
+        void palabra.offsetWidth;               // reinicia la animación
+        palabra.classList.remove('entra');
+      }, 450);
+    }, 2400);
+  } else if (palabra) {
+    palabra.textContent = 'lo que se te ocurra';
+  }
+
+  // 10. Año actual en el pie
   document.getElementById('anio').textContent = new Date().getFullYear();
 })();
