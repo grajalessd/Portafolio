@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-tema="noche">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-  <title>grajalessd · Páginas web, marcas y automatizaciones</title>
-  <meta name="description" content="Tú traes la idea, yo la hago realidad. Páginas web, identidad de marca, diseño, automatizaciones y soluciones con IA para tu negocio. Para negocios de cualquier ciudad.">
+  <title>GRAJA · Páginas web, marcas y automatizaciones</title>
+  <meta name="description" content="Tú traes la idea, yo la hago realidad. Páginas web, identidad de marca, diseño, automatizaciones y soluciones con IA para tu negocio, en cualquier ciudad.">
   <meta name="theme-color" content="#0F0F0E">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F0F0E'/%3E%3Ccircle cx='29' cy='28' r='10' fill='none' stroke='%23F3EEE4' stroke-width='5.5'/%3E%3Cpath d='M39 18v19c0 7-4 10.5-10 10.5-3.4 0-6-1.2-7.8-3' fill='none' stroke='%23F3EEE4' stroke-width='5.5' stroke-linecap='round'/%3E%3Ccircle cx='50' cy='45' r='5' fill='%23D4F75A'/%3E%3C/svg%3E">
 
@@ -13,14 +13,14 @@
   <link rel="canonical" href="https://grajalessd.github.io/Portafolio/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CO">
-  <meta property="og:site_name" content="grajalessd">
-  <meta property="og:title" content="grajalessd · Tú traes la idea, yo la hago realidad">
+  <meta property="og:site_name" content="GRAJA">
+  <meta property="og:title" content="GRAJA · Tú traes la idea, yo la hago realidad">
   <meta property="og:description" content="Páginas web, identidad de marca, automatizaciones y soluciones con IA para tu negocio. Cuéntame tu idea y te envío una propuesta sin compromiso.">
   <meta property="og:url" content="https://grajalessd.github.io/Portafolio/">
   <meta property="og:image" content="https://grajalessd.github.io/Portafolio/img/og-imagen.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="grajalessd: Tú traes la idea, yo la hago realidad">
+  <meta property="og:image:alt" content="GRAJA: Tú traes la idea, yo la hago realidad">
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,7 +36,28 @@
       // La pantalla de carga sale al entrar o recargar; al devolverse con "atrás" no.
       var nav = (window.performance && performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
       var quieto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (nav.type !== 'back_forward' && !quieto) html.classList.add('con-intro');
+      if (nav.type !== 'back_forward' && !quieto && location.search.indexOf('sin-intro') < 0) {
+        html.classList.add('con-intro');
+        // Mientras carga no se puede bajar: al terminar, la página empieza arriba.
+        if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+        window.scrollTo(0, 0);
+        var frenar = function (e) { if (!html.classList.contains('libre')) e.preventDefault(); };
+        var teclas = { ' ': 1, PageDown: 1, PageUp: 1, ArrowDown: 1, ArrowUp: 1, Home: 1, End: 1 };
+        window.addEventListener('wheel', frenar, { passive: false });
+        window.addEventListener('touchmove', frenar, { passive: false });
+        window.addEventListener('keydown', function (e) { if (teclas[e.key]) frenar(e); });
+        // Se libera cuando la portada ya terminó de aparecer (no al llegar al 100 %)
+        var liberar = function () {
+          if (html.classList.contains('libre')) return;
+          html.classList.add('libre');
+          window.removeEventListener('wheel', frenar);
+          window.removeEventListener('touchmove', frenar);
+          if ('scrollRestoration' in history) history.scrollRestoration = 'auto';
+          window.dispatchEvent(new Event('pagina-libre'));
+        };
+        window.addEventListener('intro-lista', function () { setTimeout(liberar, 400); });
+        setTimeout(liberar, 10000); // por si algo falla, nunca queda trabada
+      }
     })();
   </script>
 </head>
@@ -52,21 +73,19 @@
     <symbol id="i-candado" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
   </svg>
 
-  <!-- ===== Pantalla de carga con el logo ===== -->
+  <!-- ===== Pantalla de carga: GRAJA sube letra por letra y cuenta hasta 100 ===== -->
   <div class="intro" aria-hidden="true">
-    <div class="intro__lima"></div>
-    <div class="intro__panel">
-      <div class="intro__logo">
-        <span class="intro__letras">
-          <span style="--l:0">g</span><span style="--l:1">r</span><span style="--l:2">a</span><span style="--l:3">j</span><span style="--l:4">a</span><span style="--l:5">l</span><span style="--l:6">e</span><span style="--l:7">s</span><span style="--l:8">s</span><span style="--l:9">d</span>
-        </span><span class="intro__punto"></span>
-      </div>
-      <div class="intro__barra"><span></span></div>
-      <div class="intro__conteo"></div>
+    <div class="intro__palabra">
+      <span style="--l:0">G</span><span style="--l:1">R</span><span style="--l:2">A</span><span style="--l:3">J</span><span style="--l:4">A</span><i style="--l:5"></i>
     </div>
+    <div class="intro__pie">
+      <span class="intro__frase">De la idea a la realidad</span>
+      <span class="intro__conteo">0</span>
+    </div>
+    <div class="intro__barra"><span></span></div>
   </div>
   <script>
-    // La pantalla de carga espera a que la tipografía del logo esté lista y luego arranca.
+    // La pantalla de carga espera a que la tipografía esté lista y luego arranca.
     (function () {
       var html = document.documentElement;
       if (!html.classList.contains('con-intro')) return;
@@ -76,53 +95,45 @@
         iniciado = true;
         requestAnimationFrame(function () { requestAnimationFrame(function () {
           html.classList.add('intro-arranca');
-          setTimeout(function () { html.classList.add('intro-lista'); }, 2500);
+          setTimeout(function () { html.classList.add('intro-lista'); window.dispatchEvent(new Event('intro-lista')); }, 2300);
         }); });
       }
-      function esperarLogo() {
-        try { document.fonts.load('800 1em "Archivo"').then(arrancar, arrancar); } catch (e) { arrancar(); }
-      }
+      function esperar() { try { document.fonts.load('900 1em "Archivo"').then(arrancar, arrancar); } catch (e) { arrancar(); } }
       var fuentes = document.getElementById('fuentes');
-      if (fuentes && fuentes.media === 'all') { esperarLogo(); } else { window.alCargarFuentes = esperarLogo; }
+      if (fuentes && fuentes.media === 'all') { esperar(); } else { window.alCargarFuentes = esperar; }
       setTimeout(arrancar, 2000);
     })();
   </script>
 
-  <div class="riel" aria-hidden="true">
-    <span class="riel__tope">boceto</span>
-    <span class="riel__linea"><span class="riel__lleno"></span><span class="riel__punto"><span class="riel__valor">0%</span></span></span>
-    <span class="riel__tope">realidad</span>
-  </div>
-
   <a class="saltar" href="#contenido">Saltar al contenido</a>
   <div class="progreso" aria-hidden="true"></div>
+  <div class="grano" aria-hidden="true"></div>
 
   <!-- ===== Encabezado ===== -->
   <header class="encabezado">
-    <div class="contenedor encabezado__fila">
-      <a class="marca" href="#inicio" aria-label="grajalessd, ir al inicio">grajalessd<i aria-hidden="true">.</i></a>
-      <nav class="menu" aria-label="Secciones">
-        <a href="#proyectos">Proyectos</a>
-        <a href="#servicios">Servicios</a>
-        <a href="#proceso">Proceso</a>
-        <a href="#sobre-mi">Sobre mí</a>
-        <a href="#preguntas">Preguntas</a>
-      </nav>
-      <div class="encabezado__acciones">
-        <a class="icono-boton" href="https://instagram.com/grajalessd" target="_blank" rel="noopener" aria-label="Instagram @grajalessd">
-          <svg class="icono" aria-hidden="true"><use href="#i-ig"/></svg>
-        </a>
-        <a class="boton boton--chico js-wa" href="https://wa.me/573196150221" target="_blank" rel="noopener">Escríbeme</a>
-        <button type="button" class="menu-boton" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú">
-          <span></span><span></span>
-        </button>
-      </div>
-    </div>
+    <a class="marca" href="#inicio" aria-label="GRAJA, ir al inicio">GRAJA<i aria-hidden="true"></i></a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#proyectos" class="tiembla"><span data-t="Proyectos">Proyectos</span></a>
+      <a href="#servicios" class="tiembla"><span data-t="Servicios">Servicios</span></a>
+      <a href="#proceso" class="tiembla"><span data-t="Proceso">Proceso</span></a>
+      <a href="#sobre-mi" class="tiembla"><span data-t="Sobre mí">Sobre mí</span></a>
+      <a href="#preguntas" class="tiembla"><span data-t="Preguntas">Preguntas</span></a>
+    </nav>
   </header>
+  <!-- Las acciones van aparte: el encabezado se invierte de color sobre cualquier fondo, los botones no. -->
+  <div class="acciones">
+      <a class="icono-boton" href="https://instagram.com/grajalessd" target="_blank" rel="noopener" aria-label="Instagram @grajalessd">
+        <svg class="icono" aria-hidden="true"><use href="#i-ig"/></svg>
+      </a>
+      <a class="boton boton--cabeza js-wa js-magnetico" href="https://wa.me/573196150221" target="_blank" rel="noopener">Escríbeme</a>
+      <button type="button" class="menu-boton" aria-expanded="false" aria-controls="menu-movil" aria-label="Abrir menú">
+        <span></span><span></span>
+      </button>
+  </div>
 
   <!-- ===== Menú de pantalla completa (celular) ===== -->
   <div class="menu-movil" id="menu-movil" inert>
-    <nav class="contenedor menu-movil__nav" aria-label="Secciones">
+    <nav class="menu-movil__nav" aria-label="Secciones">
       <ul class="menu-movil__lista">
         <li style="--i:0"><a href="#proyectos">Proyectos</a></li>
         <li style="--i:1"><a href="#servicios">Servicios</a></li>
@@ -144,101 +155,81 @@
 
   <main id="contenido">
 
-    <!-- ===== 1. Portada =====
-         Arriba: el logo gigante en "metal líquido" lima (WebGL), que se llena al entrar
-         y se deforma donde lo toca el mouse o el dedo.
-         Abajo: la foto en polaroid nace como boceto y la realidad la pinta. -->
-    <div class="portada-pin">
-      <!-- Paso por el punto del logo: el punto lima crece y llena la pantalla al bajar -->
-      <div class="salto" aria-hidden="true">
-        <span class="salto__cuadro"></span>
-        <div class="salto__lleno"><p class="salto__texto">Mira lo que<br>ya es realidad.</p></div>
-      </div>
-    <section class="portada" id="inicio">
-      <div class="marca-liquida" data-cursor="tócalo">
-        <p class="marca-liquida__texto" aria-hidden="true">grajalessd<i>.</i></p>
+    <!-- ===== 1. Portada: GRAJA hecha de píxeles =====
+         Se arma al entrar, se dispersa con el mouse o el dedo y estalla en polvo al bajar. -->
+    <section class="heroe" id="inicio" data-tema="noche">
+      <div class="heroe__aura" aria-hidden="true"><span></span><span></span></div>
+      <h1 class="visualmente-oculto">GRAJA. Tú traes la idea, yo la hago realidad.</h1>
+
+      <div class="heroe__marca">
+        <p class="heroe__palabra" aria-hidden="true">GRAJA<i></i></p>
+        <canvas class="heroe__lienzo" aria-hidden="true"></canvas>
+        <span class="nota heroe__nota" aria-hidden="true"><span class="solo-mouse">pasa el cursor</span><span class="solo-tactil">desliza el dedo</span>
+          <svg class="nota__flecha" viewBox="0 0 60 40"><path d="M6 34 C 18 30, 34 22, 44 8"/><path d="M36 9 L45 6 L47 15"/></svg>
+        </span>
       </div>
 
-      <div class="contenedor portada__cuerpo">
-        <figure class="polaroid polaroid--portada">
-          <div class="polaroid__foto portada__foto" data-cursor="explora">
-            <img src="img/portada-1000.jpg"
-                 srcset="img/portada-1000.jpg 1000w, img/portada-1600.jpg 1600w"
-                 sizes="(min-width: 1024px) 420px, 64vw"
-                 width="1000" height="1250" alt="Jerónimo Grajales, de noche en la ciudad" fetchpriority="high" decoding="async">
-            <canvas class="portada__lienzo" aria-hidden="true"></canvas>
-            <span class="nota portada__nota" aria-hidden="true">así empieza<br>toda idea</span>
-          </div>
-          <figcaption class="polaroid__pie">Jerónimo Grajales</figcaption>
-          <span class="portada__pista" aria-hidden="true"><span class="solo-tactil">pasa el dedo por la foto</span><span class="solo-mouse">pasa el mouse por la foto</span></span>
-        </figure>
-
-        <div class="portada__contenido">
-          <h1 class="portada__titulo" aria-label="Tú traes la idea. Yo la hago realidad.">
-            <span class="linea" aria-hidden="true"><span class="p" style="--i:0">Tú</span> <span class="p" style="--i:1">traes</span> <span class="p" style="--i:2">la</span> <span class="p" style="--i:3">idea.</span></span>
-            <span class="linea" aria-hidden="true"><span class="p" style="--i:4">Yo</span> <span class="p" style="--i:5">la</span> <span class="p" style="--i:6">hago</span> <b class="p" style="--i:7">realidad.</b></span>
-          </h1>
-          <p class="portada__frase entrar" style="--d:0">Soy Jerónimo Grajales. Diseño páginas web, marcas y automatizaciones para negocios que quieren verse tan bien como trabajan.</p>
-          <div class="portada__botones entrar" style="--d:1">
-            <a class="boton boton--grande js-wa" href="https://wa.me/573196150221" target="_blank" rel="noopener">
-              <svg class="icono" aria-hidden="true"><use href="#i-wa"/></svg> Cuéntame tu idea
-            </a>
-            <a class="boton boton--linea boton--grande" href="#proyectos">Ver proyectos</a>
-          </div>
+      <div class="heroe__pie">
+        <p class="heroe__lema" aria-hidden="true">
+          <span class="linea"><span class="p" style="--i:0">Tú</span> <span class="p" style="--i:1">traes</span> <span class="p" style="--i:2">la</span> <span class="p" style="--i:3">idea.</span></span>
+          <span class="linea"><span class="p" style="--i:4">Yo</span> <span class="p" style="--i:5">la</span> <span class="p" style="--i:6">hago</span> <b class="p" style="--i:7">realidad.</b></span>
+        </p>
+        <div class="heroe__lado entrar" style="--d:0">
+          <p class="heroe__texto">Soy Jerónimo Grajales. Diseño páginas web, marcas y automatizaciones para negocios que quieren verse tan bien como trabajan.</p>
+          <a class="enlace" href="#proyectos">Ver proyectos <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
         </div>
+        <a class="heroe__wa js-wa entrar" style="--d:1" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+          <span class="heroe__wa-icono" aria-hidden="true"><svg class="icono"><use href="#i-wa"/></svg></span>
+          <span class="heroe__wa-texto"><small>WhatsApp</small>Cuéntame tu idea</span>
+          <svg class="icono heroe__wa-flecha" aria-hidden="true"><use href="#i-flecha"/></svg>
+        </a>
       </div>
     </section>
-    </div>
 
-    <!-- ===== Franjas cruzadas ===== -->
-    <div class="franjas">
+    <!-- ===== 2. Manifiesto: se ilumina palabra por palabra al bajar ===== -->
+    <section class="manifiesto" data-tema="noche" aria-label="Lo que hago">
+      <p class="manifiesto__texto js-palabras">
+        Tu idea, convertida en una página que atrapa miradas y <b>trae clientes.</b>
+      </p>
+    </section>
+
+    <!-- ===== Franjas paralelas (no se cruzan) ===== -->
+    <div class="franjas" data-tema="noche">
       <p class="visualmente-oculto">Páginas web, identidad de marca, rebranding, diseño gráfico, automatizaciones, estrategia digital y soluciones con IA para negocios, emprendedores, marcas personales, profesionales y empresas.</p>
+      <div class="franja franja--que" aria-hidden="true">
+        <div class="franja__pista">
+          <span>Páginas web</span><i></i><span>Identidad de marca</span><i></i><span>Rebranding</span><i></i><span>Diseño gráfico</span><i></i><span>Automatizaciones</span><i></i><span>Soluciones con IA</span><i></i>
+          <span>Páginas web</span><i></i><span>Identidad de marca</span><i></i><span>Rebranding</span><i></i><span>Diseño gráfico</span><i></i><span>Automatizaciones</span><i></i><span>Soluciones con IA</span><i></i>
+        </div>
+      </div>
       <div class="franja franja--quien" aria-hidden="true">
         <div class="franja__pista">
           <span>Negocios</span><i></i><span>Emprendedores</span><i></i><span>Marcas personales</span><i></i><span>Profesionales</span><i></i><span>Empresas</span><i></i>
           <span>Negocios</span><i></i><span>Emprendedores</span><i></i><span>Marcas personales</span><i></i><span>Profesionales</span><i></i><span>Empresas</span><i></i>
           <span>Negocios</span><i></i><span>Emprendedores</span><i></i><span>Marcas personales</span><i></i><span>Profesionales</span><i></i><span>Empresas</span><i></i>
-          <span>Negocios</span><i></i><span>Emprendedores</span><i></i><span>Marcas personales</span><i></i><span>Profesionales</span><i></i><span>Empresas</span><i></i>
-        </div>
-      </div>
-      <div class="franja franja--que" aria-hidden="true">
-        <div class="franja__pista">
-          <span>Páginas web</span><i></i><span>Identidad de marca</span><i></i><span>Rebranding</span><i></i><span>Diseño gráfico</span><i></i><span>Automatizaciones</span><i></i><span>Soluciones con IA</span><i></i>
-          <span>Páginas web</span><i></i><span>Identidad de marca</span><i></i><span>Rebranding</span><i></i><span>Diseño gráfico</span><i></i><span>Automatizaciones</span><i></i><span>Soluciones con IA</span><i></i>
-          <span>Páginas web</span><i></i><span>Identidad de marca</span><i></i><span>Rebranding</span><i></i><span>Diseño gráfico</span><i></i><span>Automatizaciones</span><i></i><span>Soluciones con IA</span><i></i>
-          <span>Páginas web</span><i></i><span>Identidad de marca</span><i></i><span>Rebranding</span><i></i><span>Diseño gráfico</span><i></i><span>Automatizaciones</span><i></i><span>Soluciones con IA</span><i></i>
         </div>
       </div>
     </div>
 
-    <!-- ===== 2. Proyectos: carrete horizontal =====
-         Computador: la sección se queda fija y los proyectos pasan de lado al bajar.
-         Celular: carrete que se arrastra con el dedo.
-         Para agregar un proyecto: copia un <article class="caso"> completo dentro de .reel__carrete. -->
-    <section class="reel" id="proyectos" aria-labelledby="titulo-proyectos">
-      <div class="reel__pin">
-        <div class="reel__pista">
+    <!-- ===== 3. Proyectos: tarjetas que se apilan al bajar =====
+         Para agregar un proyecto: copia un <article class="caso"> completo y cambia sus colores (--c-fondo, --c-tinta, --c-acento). -->
+    <section class="proyectos" id="proyectos" data-tema="crema" aria-labelledby="titulo-proyectos">
+      <header class="cabeza">
+        <h2 class="gigante dividir" id="titulo-proyectos">Proyectos</h2>
+        <p class="cabeza__intro revelar">Páginas impecables en celular y computador, que llevan a tu cliente directo a escribirte. Entra y explóralas.</p>
+      </header>
 
-          <header class="reel__intro revelar">
-            <h2 class="titulo" id="titulo-proyectos">Proyectos</h2>
-            <p class="cabeza__intro">Páginas que se disfrutan en el celular y llevan a tu cliente directo a escribirte. Entra y pruébalas.</p>
-            <p class="reel__desliza" aria-hidden="true">
-              <span class="solo-mouse">sigue bajando</span><span class="solo-tactil">desliza</span>
-              <svg class="icono"><use href="#i-flecha"/></svg>
-            </p>
-          </header>
+      <div class="casos">
 
-          <div class="reel__carrete">
-
-            <!-- PROYECTO: Valientte (en desarrollo) -->
-            <article class="caso" aria-labelledby="caso-valientte">
-              <div class="caso__cabeza">
-                <h3 class="caso__nombre" id="caso-valientte">Valientte</h3>
-                <p class="caso__datos">
-                  <span class="estado estado--vivo"><span class="estado__punto" aria-hidden="true"></span>En desarrollo</span>
-                  <span class="caso__tipo">Joyería</span>
-                </p>
-              </div>
+        <!-- PROYECTO: Valientte (en desarrollo) -->
+        <article class="caso" style="--c-fondo:#0C2A21; --c-tinta:#F3EEE4; --c-acento:#D4F75A" aria-labelledby="caso-valientte">
+          <div class="caso__interior">
+            <div class="caso__info">
+              <p class="caso__datos">
+                <span class="estado estado--vivo"><span class="estado__punto" aria-hidden="true"></span>En desarrollo</span>
+                <span class="caso__tipo">Joyería</span>
+              </p>
+              <h3 class="caso__nombre" id="caso-valientte">Valientte</h3>
               <p class="caso__texto">Una joyería en plata 925 y esmeraldas, con una vitrina que se recorre con el dedo, pedidos listos para enviar por WhatsApp e Instagram presente en todo el recorrido.</p>
               <div class="pestanas" role="group" aria-label="Pantallas de Valientte">
                 <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-1.jpg" data-movil="img/valientte-movil-1.jpg" data-nombre="portada">Portada</button>
@@ -246,376 +237,340 @@
                 <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-3.jpg" data-movil="img/valientte-movil-3.jpg" data-nombre="la vitrina">Vitrina</button>
                 <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-4.jpg" data-movil="img/valientte-movil-4.jpg" data-nombre="esmeraldas">Esmeraldas</button>
               </div>
-              <a class="enlace caso__enlace" href="https://grajalessd.github.io/valiente-joyeria/" target="_blank" rel="noopener" data-cursor="abrir">Ver el avance en vivo <svg class="icono" aria-hidden="true"><use href="#i-sale"/></svg></a>
+              <a class="boton boton--acento js-magnetico" href="https://grajalessd.github.io/valiente-joyeria/" target="_blank" rel="noopener" data-cursor="abrir">Ver el avance en vivo <svg class="icono" aria-hidden="true"><use href="#i-sale"/></svg></a>
+            </div>
 
-              <div class="escenario">
-                <div class="navegador">
-                  <div class="navegador__barra">
-                    <i></i><i></i><i></i>
-                    <a class="navegador__url" href="https://grajalessd.github.io/valiente-joyeria/" target="_blank" rel="noopener" aria-label="Abrir el avance de Valientte (otra pestaña)">
-                      <svg class="icono" aria-hidden="true"><use href="#i-candado"/></svg>
-                      <span>grajalessd.github.io/valiente-joyeria</span>
-                    </a>
-                  </div>
-                  <img class="js-pc" src="img/valientte-pc-2.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="Valientte en computador: colecciones">
+            <div class="escenario">
+              <div class="navegador">
+                <div class="navegador__barra">
+                  <i></i><i></i><i></i>
+                  <a class="navegador__url" href="https://grajalessd.github.io/valiente-joyeria/" target="_blank" rel="noopener" aria-label="Abrir el avance de Valientte (otra pestaña)">
+                    <svg class="icono" aria-hidden="true"><use href="#i-candado"/></svg>
+                    <span>grajalessd.github.io/valiente-joyeria</span>
+                  </a>
                 </div>
-                <div class="celular">
-                  <img class="js-movil" src="img/valientte-movil-2.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="Valientte en celular: colecciones">
-                  <span class="nota nota--celular" aria-hidden="true">así se ve en<br>tu celular
-                    <svg class="nota__flecha" viewBox="0 0 60 40"><path d="M4 6 C 20 4, 40 12, 50 32"/><path d="M42 30 L50 33 L52 24"/></svg>
-                  </span>
-                </div>
+                <img class="js-pc" src="img/valientte-pc-2.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="Valientte en computador: colecciones">
               </div>
-            </article>
+              <div class="celular">
+                <img class="js-movil" src="img/valientte-movil-2.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="Valientte en celular: colecciones">
+                <span class="nota nota--celular" aria-hidden="true">así se ve en<br>tu celular
+                  <svg class="nota__flecha" viewBox="0 0 60 40"><path d="M4 6 C 20 4, 40 12, 50 32"/><path d="M42 30 L50 33 L52 24"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </article>
 
-            <!-- PROYECTO: Burger Ribs (proyecto de muestra) -->
-            <article class="caso" aria-labelledby="caso-burger">
-              <div class="caso__cabeza">
-                <h3 class="caso__nombre" id="caso-burger">Burger Ribs</h3>
-                <p class="caso__datos">
-                  <span class="estado">Proyecto de muestra</span>
-                  <span class="caso__tipo">Restaurante</span>
-                </p>
-              </div>
-              <p class="caso__texto">Una propuesta para un restaurante: el cliente se antoja, arma su hamburguesa y envía el pedido por WhatsApp en pocos toques.</p>
+        <!-- PROYECTO: Burger Ribs (proyecto de muestra) -->
+        <article class="caso" style="--c-fondo:#1F0E09; --c-tinta:#F3EEE4; --c-acento:#FF7A59" aria-labelledby="caso-burger">
+          <div class="caso__interior">
+            <div class="caso__info">
+              <p class="caso__datos">
+                <span class="estado">Proyecto de muestra</span>
+                <span class="caso__tipo">Restaurante</span>
+              </p>
+              <h3 class="caso__nombre" id="caso-burger">Burger Ribs</h3>
+              <p class="caso__texto">Una propuesta para un restaurante: el cliente explora la carta, arma su hamburguesa y envía el pedido por WhatsApp en pocos toques.</p>
               <div class="pestanas" role="group" aria-label="Pantallas de Burger Ribs">
                 <button type="button" class="pestana" aria-pressed="true" data-pc="img/br-pc-1.jpg" data-movil="img/br-movil-1.jpg" data-nombre="portada">Portada</button>
                 <button type="button" class="pestana" aria-pressed="false" data-pc="img/br-pc-2.jpg" data-movil="img/br-movil-2.jpg" data-nombre="la carta">Carta</button>
                 <button type="button" class="pestana" aria-pressed="false" data-pc="img/br-pc-3.jpg" data-movil="img/br-movil-3.jpg" data-nombre="arma tu burger">Arma tu burger</button>
               </div>
-              <a class="enlace caso__enlace" href="https://grajalessd.github.io/burgerribs/" target="_blank" rel="noopener" data-cursor="abrir">Pruébala como cliente <svg class="icono" aria-hidden="true"><use href="#i-sale"/></svg></a>
+              <a class="boton boton--acento js-magnetico" href="https://grajalessd.github.io/burgerribs/" target="_blank" rel="noopener" data-cursor="abrir">Pruébala como cliente <svg class="icono" aria-hidden="true"><use href="#i-sale"/></svg></a>
+            </div>
 
-              <div class="escenario">
-                <div class="navegador">
-                  <div class="navegador__barra">
-                    <i></i><i></i><i></i>
-                    <a class="navegador__url" href="https://grajalessd.github.io/burgerribs/" target="_blank" rel="noopener" aria-label="Abrir Burger Ribs (otra pestaña)">
-                      <svg class="icono" aria-hidden="true"><use href="#i-candado"/></svg>
-                      <span>grajalessd.github.io/burgerribs</span>
-                    </a>
-                  </div>
-                  <img class="js-pc" src="img/br-pc-1.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="Burger Ribs en computador: portada">
+            <div class="escenario">
+              <div class="navegador">
+                <div class="navegador__barra">
+                  <i></i><i></i><i></i>
+                  <a class="navegador__url" href="https://grajalessd.github.io/burgerribs/" target="_blank" rel="noopener" aria-label="Abrir Burger Ribs (otra pestaña)">
+                    <svg class="icono" aria-hidden="true"><use href="#i-candado"/></svg>
+                    <span>grajalessd.github.io/burgerribs</span>
+                  </a>
                 </div>
-                <div class="celular">
-                  <img class="js-movil" src="img/br-movil-1.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="Burger Ribs en celular: portada">
-                </div>
+                <img class="js-pc" src="img/br-pc-1.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="Burger Ribs en computador: portada">
               </div>
-            </article>
+              <div class="celular">
+                <img class="js-movil" src="img/br-movil-1.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="Burger Ribs en celular: portada">
+              </div>
+            </div>
+          </div>
+        </article>
 
-            <!-- El próximo proyecto: todavía es un boceto -->
-            <a class="proximo js-wa" data-cursor="escríbeme" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero que el próximo proyecto sea el mío." href="https://wa.me/573196150221" target="_blank" rel="noopener">
-              <span class="proximo__nota" aria-hidden="true">tu proyecto aquí</span>
-              <span class="proximo__titulo">El próximo puede ser el tuyo.</span>
+        <!-- El próximo proyecto -->
+        <a class="caso caso--proximo js-wa" style="--c-fondo:transparent; --c-tinta:#0F0F0E; --c-acento:#0F0F0E" data-cursor="escríbeme" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero que el próximo proyecto sea el mío." href="https://wa.me/573196150221" target="_blank" rel="noopener">
+          <span class="caso__interior proximo">
+            <span class="nota proximo__nota" aria-hidden="true">tu proyecto empieza aquí</span>
+            <span class="proximo__titulo">El próximo puede ser el tuyo.</span>
+            <span class="proximo__pie">
               <span class="proximo__sub">Cuéntame tu idea y te muestro cómo se vería.</span>
               <span class="proximo__flecha" aria-hidden="true"><svg class="icono"><use href="#i-flecha"/></svg></span>
-            </a>
-          </div>
-        </div>
-        <div class="reel__barra" aria-hidden="true"><span></span></div>
+            </span>
+          </span>
+        </a>
       </div>
     </section>
 
-    <!-- ===== 3. Servicios ===== -->
-    <section class="seccion seccion--servicios" id="servicios">
-      <div class="contenedor">
-        <header class="cabeza revelar">
-          <h2 class="titulo">Lo que hago</h2>
-          <p class="cabeza__intro">Todo lo que tu negocio necesita para verse bien y vender más, en un solo lugar. Toca uno para ver qué incluye.</p>
-        </header>
+    <!-- ===== 4. Servicios: filas gigantes que se llenan desde donde entra el mouse ===== -->
+    <section class="servicios" id="servicios" data-tema="noche">
+      <header class="cabeza">
+        <h2 class="gigante dividir">Lo que hago</h2>
+        <p class="cabeza__intro revelar">Todo lo que tu negocio necesita para verse bien y vender más. Selecciona uno para ver qué incluye.</p>
+      </header>
 
-        <!-- Para cambiar lo que dice cada servicio, edita su texto aquí.
-             data-mensaje = mensaje de WhatsApp que sale ya escrito. -->
-        <ul class="pliegos pliegos--servicios">
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza">
-              <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-web">
-                <span class="pliego__nombre">Páginas web</span>
-                <span class="pliego__corto">Para que te encuentren, te entiendan y te escriban.</span>
-                <span class="cruz" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="pliego__panel" id="s-web">
-              <div class="pliego__interior">
-                <p>Diseño tu página desde cero, pensada para que tus clientes entiendan rápido lo que ofreces y te escriban con un solo toque.</p>
-                <ul class="incluye">
-                  <li>Diseño único, hecho a la medida de tu negocio</li>
-                  <li>Perfecta en celular y en computador</li>
-                  <li>Botones directos a tu WhatsApp y redes</li>
-                  <li>Carta, catálogo o portafolio, según tu negocio</li>
-                  <li>Te acompaño hasta dejarla publicada</li>
-                </ul>
-                <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero una página web para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero mi página web <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-              </div>
-            </div>
-          </li>
+      <!-- data-mensaje = mensaje de WhatsApp que sale ya escrito. -->
+      <ul class="pliegos pliegos--servicios">
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza">
+            <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-web">
+              <span class="pliego__nombre">Páginas web</span>
+              <span class="pliego__corto">Para que te encuentren, te entiendan y te escriban.</span>
+              <span class="cruz" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="pliego__panel" id="s-web"><div class="pliego__interior">
+            <p>Diseño tu página desde cero, pensada para que tus clientes entiendan rápido lo que ofreces y te escriban con un solo toque.</p>
+            <ul class="incluye">
+              <li>Diseño único, hecho a la medida de tu negocio</li>
+              <li>Perfecta en celular y en computador</li>
+              <li>Botones directos a tu WhatsApp y redes</li>
+              <li>Carta, catálogo o portafolio, según tu negocio</li>
+              <li>Te acompaño hasta dejarla publicada</li>
+            </ul>
+            <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero una página web para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero mi página web <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+          </div></div>
+        </li>
 
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza">
-              <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-marca">
-                <span class="pliego__nombre">Identidad de marca</span>
-                <span class="pliego__corto">Logo, colores y estilo: una marca que se recuerda.</span>
-                <span class="cruz" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="pliego__panel" id="s-marca">
-              <div class="pliego__interior">
-                <p>Creo la personalidad visual de tu negocio para que la gente te reconozca y confíe en ti desde el primer vistazo.</p>
-                <ul class="incluye">
-                  <li>Logo y sus versiones para cada uso</li>
-                  <li>Paleta de colores y tipografías</li>
-                  <li>Un estilo coherente en todo lo que publiques</li>
-                  <li>Una guía sencilla para usar tu marca</li>
-                </ul>
-                <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero crear la marca de mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero crear mi marca <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-              </div>
-            </div>
-          </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza">
+            <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-marca">
+              <span class="pliego__nombre">Identidad de marca</span>
+              <span class="pliego__corto">Logo, colores y estilo: una marca que se recuerda.</span>
+              <span class="cruz" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="pliego__panel" id="s-marca"><div class="pliego__interior">
+            <p>Creo la personalidad visual de tu negocio para que la gente te reconozca y confíe en ti desde el primer vistazo.</p>
+            <ul class="incluye">
+              <li>Logo y sus versiones para cada uso</li>
+              <li>Paleta de colores y tipografías</li>
+              <li>Un estilo coherente en todo lo que publiques</li>
+              <li>Una guía sencilla para usar tu marca</li>
+            </ul>
+            <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero crear la marca de mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero crear mi marca <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+          </div></div>
+        </li>
 
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza">
-              <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-rebranding">
-                <span class="pliego__nombre">Rebranding</span>
-                <span class="pliego__corto">Tu marca renovada, sin perder lo que la hace tuya.</span>
-                <span class="cruz" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="pliego__panel" id="s-rebranding">
-              <div class="pliego__interior">
-                <p>Renuevo tu marca para que refleje lo que tu negocio es hoy, conservando lo que tus clientes ya reconocen y quieren de ti.</p>
-                <ul class="incluye">
-                  <li>Revisamos juntos tu marca actual</li>
-                  <li>Logo y estilo actualizados</li>
-                  <li>Una transición ordenada en redes y piezas</li>
-                  <li>Más profesional, sin perder tu esencia</li>
-                </ul>
-                <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero renovar la marca de mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero renovar mi marca <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-              </div>
-            </div>
-          </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza">
+            <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-rebranding">
+              <span class="pliego__nombre">Rebranding</span>
+              <span class="pliego__corto">Tu marca renovada, sin perder lo que la hace tuya.</span>
+              <span class="cruz" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="pliego__panel" id="s-rebranding"><div class="pliego__interior">
+            <p>Renuevo tu marca para que refleje lo que tu negocio es hoy, conservando lo que tus clientes ya reconocen y quieren de ti.</p>
+            <ul class="incluye">
+              <li>Revisamos juntos tu marca actual</li>
+              <li>Logo y estilo actualizados</li>
+              <li>Una transición ordenada en redes y piezas</li>
+              <li>Más profesional, sin perder tu esencia</li>
+            </ul>
+            <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero renovar la marca de mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero renovar mi marca <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+          </div></div>
+        </li>
 
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza">
-              <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-diseno">
-                <span class="pliego__nombre">Diseño gráfico</span>
-                <span class="pliego__corto">Piezas para redes, menús, avisos y todo lo visual.</span>
-                <span class="cruz" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="pliego__panel" id="s-diseno">
-              <div class="pliego__interior">
-                <p>Diseño las piezas que tu negocio necesita para comunicar con estilo, en redes y fuera de ellas.</p>
-                <ul class="incluye">
-                  <li>Publicaciones e historias para redes</li>
-                  <li>Menús y cartas</li>
-                  <li>Volantes, avisos y pendones</li>
-                  <li>Tarjetas de presentación</li>
-                </ul>
-                <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y necesito diseños para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero mis diseños <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-              </div>
-            </div>
-          </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza">
+            <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-diseno">
+              <span class="pliego__nombre">Diseño gráfico</span>
+              <span class="pliego__corto">Piezas para redes, menús, avisos y todo lo visual.</span>
+              <span class="cruz" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="pliego__panel" id="s-diseno"><div class="pliego__interior">
+            <p>Diseño las piezas que tu negocio necesita para comunicar con estilo, en redes y fuera de ellas.</p>
+            <ul class="incluye">
+              <li>Publicaciones e historias para redes</li>
+              <li>Menús y cartas</li>
+              <li>Volantes, avisos y pendones</li>
+              <li>Tarjetas de presentación</li>
+            </ul>
+            <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y necesito diseños para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero mis diseños <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+          </div></div>
+        </li>
 
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza">
-              <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-auto">
-                <span class="pliego__nombre">Automatizaciones</span>
-                <span class="pliego__corto">Las tareas repetitivas se hacen solas y tú ganas tiempo.</span>
-                <span class="cruz" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="pliego__panel" id="s-auto">
-              <div class="pliego__interior">
-                <p>Hago que las tareas repetitivas de tu negocio se hagan solas, para que te enfoques en lo importante.</p>
-                <ul class="incluye">
-                  <li>Respuestas automáticas a preguntas frecuentes</li>
-                  <li>Formularios que guardan todo en orden</li>
-                  <li>Recordatorios y avisos automáticos</li>
-                  <li>Conexión entre las herramientas que ya usas</li>
-                </ul>
-                <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero automatizar tareas de mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero automatizar mi negocio <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-              </div>
-            </div>
-          </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza">
+            <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-auto">
+              <span class="pliego__nombre">Automatizaciones</span>
+              <span class="pliego__corto">Las tareas repetitivas se hacen solas y tú ganas tiempo.</span>
+              <span class="cruz" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="pliego__panel" id="s-auto"><div class="pliego__interior">
+            <p>Hago que las tareas repetitivas de tu negocio se hagan solas, para que te enfoques en lo importante.</p>
+            <ul class="incluye">
+              <li>Respuestas automáticas a preguntas frecuentes</li>
+              <li>Formularios que guardan todo en orden</li>
+              <li>Recordatorios y avisos automáticos</li>
+              <li>Conexión entre las herramientas que ya usas</li>
+            </ul>
+            <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero automatizar tareas de mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero automatizar mi negocio <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+          </div></div>
+        </li>
 
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza">
-              <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-ia">
-                <span class="pliego__nombre">Soluciones con IA</span>
-                <span class="pliego__corto">Herramientas inteligentes a la medida de tu negocio.</span>
-                <span class="cruz" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="pliego__panel" id="s-ia">
-              <div class="pliego__interior">
-                <p>Uso la inteligencia artificial para crear herramientas que te ahorran tiempo y te ayudan a atender mejor.</p>
-                <ul class="incluye">
-                  <li>Asistentes que responden a tus clientes</li>
-                  <li>Textos y contenido en mucho menos tiempo</li>
-                  <li>Información organizada para decidir mejor</li>
-                  <li>Ideas nuevas que exploramos juntos</li>
-                </ul>
-                <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero una solución con IA para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero una solución con IA <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-              </div>
-            </div>
-          </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza">
+            <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-ia">
+              <span class="pliego__nombre">Soluciones con IA</span>
+              <span class="pliego__corto">Herramientas inteligentes a la medida de tu negocio.</span>
+              <span class="cruz" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="pliego__panel" id="s-ia"><div class="pliego__interior">
+            <p>Uso la inteligencia artificial para crear herramientas que te ahorran tiempo y te ayudan a atender mejor.</p>
+            <ul class="incluye">
+              <li>Asistentes que responden a tus clientes</li>
+              <li>Textos y contenido en mucho menos tiempo</li>
+              <li>Información organizada para decidir mejor</li>
+              <li>Ideas nuevas que exploramos juntos</li>
+            </ul>
+            <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero una solución con IA para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero una solución con IA <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+          </div></div>
+        </li>
 
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza">
-              <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-estrategia">
-                <span class="pliego__nombre">Estrategia digital</span>
-                <span class="pliego__corto">Un plan claro para llegar a más clientes.</span>
-                <span class="cruz" aria-hidden="true"></span>
-              </button>
-            </h3>
-            <div class="pliego__panel" id="s-estrategia">
-              <div class="pliego__interior">
-                <p>Definimos un plan para que tu negocio crezca en internet, con pasos fáciles de seguir.</p>
-                <ul class="incluye">
-                  <li>Revisión de tu presencia en redes e internet</li>
-                  <li>Plan de contenido para tus redes</li>
-                  <li>Mensajes que conectan con tu público</li>
-                  <li>Acciones concretas para empezar ya</li>
-                </ul>
-                <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero un plan para hacer crecer mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero un plan para crecer <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
-              </div>
-            </div>
-          </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza">
+            <button type="button" class="pliego__boton" aria-expanded="false" aria-controls="s-estrategia">
+              <span class="pliego__nombre">Estrategia digital</span>
+              <span class="pliego__corto">Un plan claro para llegar a más clientes.</span>
+              <span class="cruz" aria-hidden="true"></span>
+            </button>
+          </h3>
+          <div class="pliego__panel" id="s-estrategia"><div class="pliego__interior">
+            <p>Definimos un plan para que tu negocio crezca en internet, con pasos fáciles de seguir.</p>
+            <ul class="incluye">
+              <li>Revisión de tu presencia en redes e internet</li>
+              <li>Plan de contenido para tus redes</li>
+              <li>Mensajes que conectan con tu público</li>
+              <li>Acciones concretas para empezar ya</li>
+            </ul>
+            <a class="enlace js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y quiero un plan para hacer crecer mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">Quiero un plan para crecer <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
+          </div></div>
+        </li>
+      </ul>
 
-          <li class="pliego pliego--tambien revelar">
-            <a class="tambien js-wa" data-mensaje="Hola Jerónimo, vi tu portafolio y tengo una idea diferente para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener">
-              <span class="tambien__fila">
-                <span class="tambien__y">Y también</span>
-                <span class="tambien__ventana"><span class="tambien__palabra js-imagina">una tienda en línea</span></span>
-              </span>
-              <span class="tambien__cierre">Si lo puedes imaginar, lo hacemos. <span class="tambien__cta">Cuéntame tu idea <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></span></span>
-            </a>
-          </li>
-        </ul>
-      </div>
+      <a class="tambien js-wa revelar" data-mensaje="Hola Jerónimo, vi tu portafolio y tengo una idea diferente para mi negocio." href="https://wa.me/573196150221" target="_blank" rel="noopener" data-cursor="cuéntame">
+        <span class="tambien__y">Y también</span>
+        <span class="tambien__ventana"><span class="tambien__palabra js-imagina">una tienda en línea</span></span>
+        <span class="tambien__cierre">Si lo puedes imaginar, lo hacemos. <span class="tambien__cta">Cuéntame tu idea <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></span></span>
+      </a>
     </section>
 
-    <!-- ===== 4. Proceso (sección lima) ===== -->
-    <section class="proceso" id="proceso">
-      <div class="contenedor">
-        <header class="cabeza revelar">
-          <h2 class="titulo">Así trabajamos</h2>
-          <p class="cabeza__intro">Cuatro pasos. Tú me cuentas y yo me encargo del resto.</p>
+    <!-- ===== 5. Proceso: la pantalla se queda quieta y los pasos cambian al bajar ===== -->
+    <section class="proceso" id="proceso" data-tema="lima" aria-labelledby="titulo-proceso">
+      <div class="proceso__fijo">
+        <header class="proceso__cabeza">
+          <h2 class="proceso__titulo" id="titulo-proceso">Así trabajamos</h2>
+          <p>Tú me cuentas y yo me encargo del resto.</p>
         </header>
-
-        <ol class="pasos" style="--avance:0">
-          <li class="paso">
-            <span class="paso__icono" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 19.5l1.2-3.7A7.8 7.8 0 1 1 8.3 19l-4.3.5z"/><path d="M9 11h6M9 14h4"/></svg>
-            </span>
-            <div>
-              <h3>Me escribes</h3>
-              <p>Me cuentas tu idea por WhatsApp. Si prefieres una reunión, la cuadramos.</p>
-            </div>
+        <ol class="pasos">
+          <li class="paso es-actual">
+            <h3 class="paso__nombre">Conversamos</h3>
+            <p class="paso__texto">Me cuentas tu idea por WhatsApp o, si lo prefieres, agendamos una reunión.</p>
           </li>
           <li class="paso">
-            <span class="paso__icono" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="2"/><path d="M7.5 7.5h9M7.5 11h5M7.5 16h3.5"/><path d="M14.5 15l2 2 3.5-4"/></svg>
-            </span>
-            <div>
-              <h3>Te muestro un boceto</h3>
-              <p>Ves cómo va a quedar antes de construirla, directo en tu celular.</p>
-            </div>
+            <h3 class="paso__nombre">Te muestro un boceto</h3>
+            <p class="paso__texto">Antes de construirla, ves cómo quedará directamente en tu celular.</p>
           </li>
           <li class="paso">
-            <span class="paso__icono" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
-            </span>
-            <div>
-              <h3>Lo ajustamos juntos</h3>
-              <p>¿Cambiaste de idea? Ajustamos hasta que digas «esto es justo lo que quería».</p>
-            </div>
+            <h3 class="paso__nombre">Lo ajustamos juntos</h3>
+            <p class="paso__texto">Afinamos cada detalle hasta que el resultado sea exactamente lo que imaginaste.</p>
           </li>
           <li class="paso">
-            <span class="paso__icono" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="14" rx="2"/><path d="M3 8.5h18"/><path d="M8.5 13.5l2.4 2.4 4.6-4.6"/></svg>
-            </span>
-            <div>
-              <h3>Sale al aire</h3>
-              <p>Te acompaño hasta dejarla publicada y lista para recibir clientes.</p>
-            </div>
+            <h3 class="paso__nombre">Publicamos</h3>
+            <p class="paso__texto">Te acompaño hasta dejarla publicada y lista para recibir clientes.</p>
           </li>
         </ol>
+        <div class="proceso__riel" aria-hidden="true">
+          <span class="proceso__lleno"></span>
+          <span class="proceso__marca" data-p="0">Idea</span><span class="proceso__marca" data-p="1">Boceto</span><span class="proceso__marca" data-p="2">Ajustes</span><span class="proceso__marca" data-p="3">Realidad</span>
+        </div>
       </div>
     </section>
 
-    <!-- ===== 5. Sobre mí: fotos sueltas como polaroids =====
-         Computador: se arrastran y se lanzan. Celular: al tocarlas se barajan. -->
-    <section class="sobre" id="sobre-mi">
-      <div class="contenedor sobre__fila">
+    <!-- ===== 6. Sobre mí: polaroids que se lanzan ===== -->
+    <section class="sobre" id="sobre-mi" data-tema="crema">
+      <div class="sobre__fila">
         <div class="pila" data-cursor="arrastra">
-          <figure class="polaroid polaroid--suelta" style="--r:-7deg; --x:-16%; --y:6%"><div class="polaroid__foto"><img src="img/polaroid-4.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo con gorra blanca, al aire libre"></div><figcaption class="polaroid__pie">de boceto a realidad</figcaption></figure>
-          <figure class="polaroid polaroid--suelta" style="--r:6deg; --x:18%; --y:-4%"><div class="polaroid__foto"><img src="img/polaroid-3.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo sonriendo, sentado en su moto"></div><figcaption class="polaroid__pie">siempre creando</figcaption></figure>
-          <figure class="polaroid polaroid--suelta" style="--r:-3deg; --x:-6%; --y:-8%"><div class="polaroid__foto"><img src="img/polaroid-2.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo sentado de noche, con camiseta estampada"></div><figcaption class="polaroid__pie">@grajalessd</figcaption></figure>
-          <figure class="polaroid polaroid--suelta" style="--r:4deg; --x:8%; --y:4%"><div class="polaroid__foto"><img src="img/polaroid-1.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo con los brazos cruzados, camiseta negra"></div><figcaption class="polaroid__pie">yo</figcaption></figure>
-          <span class="pila__pista" aria-hidden="true"><span class="solo-mouse">arrastra las fotos</span><span class="solo-tactil">toca para pasar la foto</span></span>
+          <figure class="polaroid" style="--r:-8deg; --x:-18%; --y:6%"><div class="polaroid__foto"><img src="img/polaroid-4.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo con gorra blanca, al aire libre"></div><figcaption class="polaroid__pie">de boceto a realidad</figcaption></figure>
+          <figure class="polaroid" style="--r:7deg; --x:18%; --y:-4%"><div class="polaroid__foto"><img src="img/polaroid-3.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo sonriendo, sentado en su moto"></div><figcaption class="polaroid__pie">siempre creando</figcaption></figure>
+          <figure class="polaroid" style="--r:-3deg; --x:-6%; --y:-8%"><div class="polaroid__foto"><img src="img/polaroid-2.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo sentado de noche, con camiseta estampada"></div><figcaption class="polaroid__pie">@grajalessd</figcaption></figure>
+          <figure class="polaroid" style="--r:4deg; --x:8%; --y:4%"><div class="polaroid__foto"><img src="img/polaroid-1.jpg" width="720" height="900" loading="lazy" decoding="async" alt="Jerónimo con los brazos cruzados, camiseta negra"></div><figcaption class="polaroid__pie">yo</figcaption></figure>
+          <span class="nota pila__pista" aria-hidden="true"><span class="solo-mouse">arrástralas</span><span class="solo-tactil">toca para pasar la foto</span></span>
         </div>
 
-        <div class="sobre__texto revelar">
-          <h2 class="titulo">Hola, soy Jerónimo</h2>
-          <p class="sobre__grande">Tengo 22 años y llevo 3 creando contenido en TikTok. Sé lo que hace que alguien se detenga a mirar.</p>
-          <p>Estudio Administración de Empresas en la Universidad de Manizales, así que pienso cada proyecto también como negocio. Y trabajo con inteligencia artificial para llevar cada idea más lejos.</p>
-          <a class="enlace" href="https://instagram.com/grajalessd" target="_blank" rel="noopener"><svg class="icono" aria-hidden="true"><use href="#i-ig"/></svg> Sígueme en @grajalessd</a>
+        <div class="sobre__texto">
+          <h2 class="gigante gigante--sobre dividir">Acerca de mí</h2>
+          <p class="sobre__grande revelar">Soy Jerónimo Grajales, tengo 22 años y llevo tres creando contenido digital. Sé qué hace que alguien se detenga a mirar.</p>
+          <p class="revelar">Estudio Administración de Empresas en la Universidad de Manizales, así que pienso cada proyecto también como negocio. Y trabajo con inteligencia artificial para llevar cada idea más lejos.</p>
+          <a class="boton boton--noche js-magnetico revelar" href="https://instagram.com/grajalessd" target="_blank" rel="noopener"><svg class="icono" aria-hidden="true"><use href="#i-ig"/></svg> Conóceme en Instagram</a>
         </div>
       </div>
     </section>
 
-    <!-- ===== 6. Preguntas ===== -->
-    <section class="seccion" id="preguntas">
-      <div class="contenedor preguntas">
-        <header class="cabeza revelar">
-          <h2 class="titulo">Preguntas</h2>
-          <p class="cabeza__intro">Lo que casi todos me preguntan antes de empezar.</p>
-        </header>
+    <!-- ===== 7. Preguntas ===== -->
+    <section class="preguntas" id="preguntas" data-tema="noche">
+      <header class="cabeza preguntas__cabeza">
+        <h2 class="gigante dividir">Preguntas</h2>
+        <p class="cabeza__intro revelar">Lo que suelen preguntarme antes de empezar.</p>
+      </header>
 
-        <ul class="pliegos pliegos--preguntas">
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-precio"><span class="pliego__nombre">¿Cuánto cuesta?</span><span class="cruz" aria-hidden="true"></span></button></h3>
-            <div class="pliego__panel" id="p-precio"><div class="pliego__interior"><p>Depende de lo que necesites. Cuéntame tu idea y te envío una propuesta con el precio claro, sin compromiso.</p></div></div>
-          </li>
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-tiempo"><span class="pliego__nombre">¿Cuánto se demora?</span><span class="cruz" aria-hidden="true"></span></button></h3>
-            <div class="pliego__panel" id="p-tiempo"><div class="pliego__interior"><p>Cada proyecto es distinto. En la propuesta te doy una fecha de entrega clara.</p></div></div>
-          </li>
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-logo"><span class="pliego__nombre">¿Necesito tener logo?</span><span class="cruz" aria-hidden="true"></span></button></h3>
-            <div class="pliego__panel" id="p-logo"><div class="pliego__interior"><p>No. Si todavía no lo tienes, lo creamos juntos y tu página nace con una marca a la altura.</p></div></div>
-          </li>
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-publicar"><span class="pliego__nombre">¿Me ayudas a publicarla?</span><span class="cruz" aria-hidden="true"></span></button></h3>
-            <div class="pliego__panel" id="p-publicar"><div class="pliego__interior"><p>Sí. Te acompaño hasta dejarla publicada en internet y lista para compartir.</p></div></div>
-          </li>
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-cambios"><span class="pliego__nombre">¿Puedo pedir cambios?</span><span class="cruz" aria-hidden="true"></span></button></h3>
-            <div class="pliego__panel" id="p-cambios"><div class="pliego__interior"><p>Claro. Durante el proceso la ajustamos juntos hasta que quede como la imaginas.</p></div></div>
-          </li>
-          <li class="pliego revelar">
-            <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-ciudad"><span class="pliego__nombre">¿Trabajas con negocios de otras ciudades?</span><span class="cruz" aria-hidden="true"></span></button></h3>
-            <div class="pliego__panel" id="p-ciudad"><div class="pliego__interior"><p>Sí. Trabajo con negocios de cualquier ciudad: todo se puede hacer por WhatsApp o por videollamada.</p></div></div>
-          </li>
-        </ul>
-      </div>
+      <ul class="pliegos pliegos--preguntas">
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-precio"><span class="pliego__nombre">¿Cuánto cuesta?</span><span class="cruz" aria-hidden="true"></span></button></h3>
+          <div class="pliego__panel" id="p-precio"><div class="pliego__interior"><p>Depende de lo que necesites. Cuéntame tu idea y te envío una propuesta con el precio claro, sin compromiso.</p></div></div>
+        </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-tiempo"><span class="pliego__nombre">¿Cuánto se demora?</span><span class="cruz" aria-hidden="true"></span></button></h3>
+          <div class="pliego__panel" id="p-tiempo"><div class="pliego__interior"><p>Cada proyecto es distinto. En la propuesta te doy una fecha de entrega clara.</p></div></div>
+        </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-logo"><span class="pliego__nombre">¿Necesito tener logo?</span><span class="cruz" aria-hidden="true"></span></button></h3>
+          <div class="pliego__panel" id="p-logo"><div class="pliego__interior"><p>No. Si todavía no lo tienes, lo creamos juntos y tu página nace con una marca a la altura.</p></div></div>
+        </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-publicar"><span class="pliego__nombre">¿Me ayudas a publicarla?</span><span class="cruz" aria-hidden="true"></span></button></h3>
+          <div class="pliego__panel" id="p-publicar"><div class="pliego__interior"><p>Sí. Te acompaño hasta dejarla publicada en internet y lista para compartir.</p></div></div>
+        </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-cambios"><span class="pliego__nombre">¿Puedo pedir cambios?</span><span class="cruz" aria-hidden="true"></span></button></h3>
+          <div class="pliego__panel" id="p-cambios"><div class="pliego__interior"><p>Claro. Durante el proceso la ajustamos juntos hasta que quede como la imaginas.</p></div></div>
+        </li>
+        <li class="pliego revelar">
+          <h3 class="pliego__cabeza"><button type="button" class="pliego__boton" aria-expanded="false" aria-controls="p-ciudad"><span class="pliego__nombre">¿Trabajas con negocios de otras ciudades?</span><span class="cruz" aria-hidden="true"></span></button></h3>
+          <div class="pliego__panel" id="p-ciudad"><div class="pliego__interior"><p>Sí. Trabajo con negocios de cualquier ciudad: todo se puede hacer por WhatsApp o por videollamada.</p></div></div>
+        </li>
+      </ul>
     </section>
 
-    <!-- ===== 7. Contacto: arma tu mensaje ===== -->
-    <section class="contacto" id="contacto">
-      <div class="contenedor contacto__caja">
-        <h2 class="contacto__titulo titulo revelar">¿Arrancamos con tu idea?</h2>
-        <p class="contacto__sub revelar">Marca lo que necesitas y tu mensaje queda listo para enviar.</p>
+    <!-- ===== 8. Contacto: arma tu mensaje ===== -->
+    <section class="contacto" id="contacto" data-tema="lima">
+      <h2 class="gigante gigante--contacto dividir">¿Empezamos?</h2>
+      <div class="contacto__fila">
+        <p class="contacto__sub revelar">Marca lo que necesitas y tu mensaje queda listo para enviar por WhatsApp.</p>
 
         <form class="armador revelar" action="https://wa.me/573196150221" method="get" target="_blank">
           <fieldset class="armador__opciones">
             <legend class="visualmente-oculto">¿Qué necesitas?</legend>
-            <label class="casilla"><input type="checkbox" value="una página web"><span class="casilla__caja" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="casilla__marco" d="M3.5 4.2c5.6-.6 11.3-.7 17-.2.4 5.3.5 10.6.2 16-5.6.5-11.3.5-17 .1-.5-5.3-.5-10.6-.2-15.9z"/><path class="casilla__check" d="M6.5 12.5l3.8 3.8L18 7.5"/></svg></span>Página web</label>
-            <label class="casilla"><input type="checkbox" value="una marca o logo"><span class="casilla__caja" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="casilla__marco" d="M3.5 4.2c5.6-.6 11.3-.7 17-.2.4 5.3.5 10.6.2 16-5.6.5-11.3.5-17 .1-.5-5.3-.5-10.6-.2-15.9z"/><path class="casilla__check" d="M6.5 12.5l3.8 3.8L18 7.5"/></svg></span>Marca o logo</label>
-            <label class="casilla"><input type="checkbox" value="renovar mi marca"><span class="casilla__caja" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="casilla__marco" d="M3.5 4.2c5.6-.6 11.3-.7 17-.2.4 5.3.5 10.6.2 16-5.6.5-11.3.5-17 .1-.5-5.3-.5-10.6-.2-15.9z"/><path class="casilla__check" d="M6.5 12.5l3.8 3.8L18 7.5"/></svg></span>Renovar mi marca</label>
-            <label class="casilla"><input type="checkbox" value="diseños para redes"><span class="casilla__caja" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="casilla__marco" d="M3.5 4.2c5.6-.6 11.3-.7 17-.2.4 5.3.5 10.6.2 16-5.6.5-11.3.5-17 .1-.5-5.3-.5-10.6-.2-15.9z"/><path class="casilla__check" d="M6.5 12.5l3.8 3.8L18 7.5"/></svg></span>Diseños para redes</label>
-            <label class="casilla"><input type="checkbox" value="automatizar tareas"><span class="casilla__caja" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="casilla__marco" d="M3.5 4.2c5.6-.6 11.3-.7 17-.2.4 5.3.5 10.6.2 16-5.6.5-11.3.5-17 .1-.5-5.3-.5-10.6-.2-15.9z"/><path class="casilla__check" d="M6.5 12.5l3.8 3.8L18 7.5"/></svg></span>Automatizar tareas</label>
-            <label class="casilla"><input type="checkbox" value="una solución con IA"><span class="casilla__caja" aria-hidden="true"><svg viewBox="0 0 24 24"><path class="casilla__marco" d="M3.5 4.2c5.6-.6 11.3-.7 17-.2.4 5.3.5 10.6.2 16-5.6.5-11.3.5-17 .1-.5-5.3-.5-10.6-.2-15.9z"/><path class="casilla__check" d="M6.5 12.5l3.8 3.8L18 7.5"/></svg></span>Algo con IA</label>
+            <label class="casilla"><input type="checkbox" value="una página web"><span>Página web</span></label>
+            <label class="casilla"><input type="checkbox" value="una marca o logo"><span>Marca o logo</span></label>
+            <label class="casilla"><input type="checkbox" value="renovar mi marca"><span>Renovar mi marca</span></label>
+            <label class="casilla"><input type="checkbox" value="diseños para redes"><span>Diseños para redes</span></label>
+            <label class="casilla"><input type="checkbox" value="automatizar tareas"><span>Automatizar tareas</span></label>
+            <label class="casilla"><input type="checkbox" value="una solución con IA"><span>Algo con IA</span></label>
           </fieldset>
 
           <label class="armador__campo">
@@ -628,28 +583,28 @@
             <p class="burbuja__texto js-burbuja" aria-live="polite">Hola Jerónimo, vi tu portafolio y quiero contarte una idea.</p>
           </div>
 
-          <a class="boton boton--enorme js-enviar js-magnetico" href="https://wa.me/573196150221" target="_blank" rel="noopener">
+          <a class="boton boton--enorme js-enviar js-magnetico" href="https://wa.me/573196150221" target="_blank" rel="noopener" data-cursor="enviar">
             <svg class="icono" aria-hidden="true"><use href="#i-wa"/></svg> Enviar por WhatsApp
           </a>
         </form>
-
-        <ul class="contacto__otros revelar">
-          <li><a href="mailto:jgrajalesp0203@gmail.com"><svg class="icono" aria-hidden="true"><use href="#i-mail"/></svg> jgrajalesp0203@gmail.com</a></li>
-          <li><a href="https://instagram.com/grajalessd" target="_blank" rel="noopener"><svg class="icono" aria-hidden="true"><use href="#i-ig"/></svg> @grajalessd</a></li>
-        </ul>
       </div>
     </section>
   </main>
 
-  <footer class="pie">
-    <div class="contenedor">
-      <div class="marca-liquida marca-liquida--pie" data-cursor="tócalo">
-        <p class="marca-liquida__texto pie__grande" aria-hidden="true">grajalessd<i>.</i></p>
+  <footer class="pie" data-tema="noche">
+    <div class="pie__contacto">
+      <p class="pie__titulo">Hablemos de tu proyecto</p>
+      <div class="pie__botones">
+        <a class="pie__boton js-magnetico" href="https://instagram.com/grajalessd" target="_blank" rel="noopener"><svg class="icono" aria-hidden="true"><use href="#i-ig"/></svg><span><small>Instagram</small>@grajalessd</span><svg class="icono pie__sale" aria-hidden="true"><use href="#i-sale"/></svg></a>
+        <a class="pie__boton js-wa js-magnetico" href="https://wa.me/573196150221" target="_blank" rel="noopener"><svg class="icono" aria-hidden="true"><use href="#i-wa"/></svg><span><small>WhatsApp</small>Escríbeme</span><svg class="icono pie__sale" aria-hidden="true"><use href="#i-sale"/></svg></a>
+        <p class="pie__correo"><svg class="icono" aria-hidden="true"><use href="#i-mail"/></svg><span><small>Correo</small>jgrajalesp0203@gmail.com</span></p>
       </div>
-      <div class="pie__fila">
-        <p>© <span id="anio">2026</span> Jerónimo Grajales Pérez · Manizales, Colombia</p>
-        <p>Esta página también empezó como un boceto.</p>
-      </div>
+    </div>
+    <p class="pie__grande" aria-hidden="true"><span>G</span><span>R</span><span>A</span><span>J</span><span>A</span><i></i></p>
+    <div class="pie__fila">
+      <p>© <span id="anio">2026</span> Jerónimo Grajales Pérez · Manizales, Colombia</p>
+      <p>Esta página también empezó como un boceto.</p>
+      <a class="pie__arriba" href="#inicio">Volver arriba <svg class="icono" aria-hidden="true"><use href="#i-flecha"/></svg></a>
     </div>
   </footer>
 
