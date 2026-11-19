@@ -88,8 +88,11 @@
     })();
   </script>
 
-  <!-- La idea en 3D: acompaña todo el recorrido (escena.js) -->
-  <canvas class="escena" aria-hidden="true"></canvas>
+  <!-- Paso por el punto del logo: el punto lima crece y llena la pantalla al bajar -->
+  <div class="salto" aria-hidden="true">
+    <span class="salto__cuadro"></span>
+    <div class="salto__lleno"><p class="salto__texto">Mira lo que<br>ya es realidad.</p></div>
+  </div>
   <div class="riel" aria-hidden="true">
     <span class="riel__tope">boceto</span>
     <span class="riel__linea"><span class="riel__lleno"></span><span class="riel__punto"><span class="riel__valor">0%</span></span></span>
@@ -150,6 +153,7 @@
          Arriba: el logo gigante en "metal líquido" lima (WebGL), que se llena al entrar
          y se deforma donde lo toca el mouse o el dedo.
          Abajo: la foto en polaroid nace como boceto y la realidad la pinta. -->
+    <div class="portada-pin">
     <section class="portada" id="inicio">
       <div class="marca-liquida" data-cursor="tócalo">
         <canvas class="marca-liquida__lienzo" aria-hidden="true"></canvas>
@@ -185,6 +189,7 @@
         </div>
       </div>
     </section>
+    </div>
 
     <!-- ===== Franjas cruzadas ===== -->
     <div class="franjas">
@@ -661,6 +666,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
   <script src="main.js" defer></script>
-  <script type="module" src="escena.js"></script>
 </body>
 </html>

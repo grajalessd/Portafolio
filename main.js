@@ -481,6 +481,11 @@
       var x0 = (W - todo.width * escala) / 2, base = aire + sube;
       m.fillStyle = '#ff0000'; m.fillText('grajalessd', x0, base);
       m.fillStyle = '#00ff00'; m.fillText('.', x0 + palabra.width * escala, base);
+      // dónde queda el punto (en fracciones del lienzo): de ahí crece el lima al bajar
+      var pm = m.measureText('.'), px0 = x0 + palabra.width * escala;
+      var pl = pm.actualBoundingBoxLeft || 0, pr = pm.actualBoundingBoxRight || fs * .25;
+      var pa = pm.actualBoundingBoxAscent || fs * .2, pd = pm.actualBoundingBoxDescent || 0;
+      cont._punto = { x: (px0 - pl) / W, y: (base - pa) / H, w: (pl + pr) / W, h: (pa + pd) / H };
       // relieve: el mismo texto muy desenfocado (bajar y subir de tamaño en varios pasos = desenfoque suave)
       alto.width = W; alto.height = H;
       var pasos = [3, 9, 22], lienzos = [mascara];
@@ -644,6 +649,85 @@
     pila.addEventListener('pointerup', soltarFoto);
     pila.addEventListener('pointercancel', function () { if (activa) { activa.classList.remove('arrastrando'); activa = null; } ini = null; });
   }
+
+  // ---------- 5d. Paso por el punto del logo ----------
+  // La portada se queda quieta, el punto lima de "grajalessd." crece hasta llenar la pantalla,
+  // aparece "Mira lo que ya es realidad." y el lima sube como un telón hacia los proyectos.
+  var pin = document.querySelector('.portada-pin');
+  var salto = document.querySelector('.salto');
+  var saltoCuadro = salto && salto.querySelector('.salto__cuadro');
+  var saltoLleno = salto && salto.querySelector('.salto__lleno');
+  var marcaSalto = document.querySelector('.portada .marca-liquida');
+  var lienzoMarca = marcaSalto && marcaSalto.querySelector('.marca-liquida__lienzo');
+  var textoMarca = marcaSalto && marcaSalto.querySelector('.marca-liquida__texto');
+  var cuerpoPortada = document.querySelector('.portada__cuerpo');
+  var saltoActivo = false;
+
+  function evaluarSalto() {
+    if (!pin || !salto || quieto) return;
+    html.classList.add('con-salto');
+    // solo si la portada cabe en una pantalla (para poder quedarse quieta)
+    saltoActivo = portada.scrollHeight <= window.innerHeight + 4;
+    if (!saltoActivo) {
+      html.classList.remove('con-salto');
+      salto.classList.remove('activo', 'lleno');
+      [lienzoMarca, textoMarca, cuerpoPortada].forEach(function (el) { if (el) { el.style.transform = ''; el.style.opacity = ''; } });
+    }
+  }
+  function puntoEnPantalla() {
+    var r = marcaSalto.getBoundingClientRect();
+    var pt = marcaSalto._punto;
+    if (!pt || !marcaSalto.classList.contains('gl')) {
+      var i = textoMarca && textoMarca.querySelector('i');
+      if (!i) return null;
+      var ri = i.getBoundingClientRect();
+      // el punto ocupa la parte baja de la caja del carácter
+      return { x: ri.left + ri.width * .15, y: ri.top + ri.height * .55, w: ri.width * .7, h: ri.height * .2, ox: 50, oy: 50 };
+    }
+    return { x: r.left + pt.x * r.width, y: r.top + pt.y * r.height, w: pt.w * r.width, h: pt.h * r.height,
+             ox: (pt.x + pt.w / 2) * 100, oy: (pt.y + pt.h / 2) * 100 };
+  }
+  function moverSalto(y) {
+    if (!saltoActivo) return false;
+    var vh = window.innerHeight;
+    var L = Math.max(1, pin.offsetHeight - vh);
+    var p = (y - pin.offsetTop) / L;
+    var t = limitar((p - .1) / .5, 0, 1);
+    var a = t * t * t;
+    var y1 = pin.offsetTop + L + vh * .12, y2 = pin.offsetTop + L + vh * .9;
+    var subir = suave(limitar((y - y1) / (y2 - y1), 0, 1));
+    var activo = p > .1 && subir < 1;
+    salto.classList.toggle('activo', activo);
+
+    var d = puntoEnPantalla();
+    if (d) {
+      var escalaMax = Math.hypot(window.innerWidth, vh) * 1.15 / Math.max(2, Math.min(d.w, d.h));
+      saltoCuadro.style.setProperty('--px', d.x.toFixed(1) + 'px');
+      saltoCuadro.style.setProperty('--py', d.y.toFixed(1) + 'px');
+      saltoCuadro.style.setProperty('--pw', d.w.toFixed(1) + 'px');
+      saltoCuadro.style.setProperty('--ph', d.h.toFixed(1) + 'px');
+      saltoCuadro.style.setProperty('--ps', (1 + a * (escalaMax - 1)).toFixed(3));
+      [lienzoMarca, textoMarca].forEach(function (el) {
+        if (!el) return;
+        el.style.transformOrigin = d.ox.toFixed(2) + '% ' + d.oy.toFixed(2) + '%';
+        el.style.transform = 'scale(' + (1 + a * .6).toFixed(4) + ')';
+      });
+    }
+    if (cuerpoPortada) {
+      cuerpoPortada.style.opacity = (1 - limitar(t * 1.8, 0, 1)).toFixed(3);
+      cuerpoPortada.style.transform = 'translateY(' + (-t * 50).toFixed(1) + 'px) scale(' + (1 - t * .05).toFixed(4) + ')';
+    }
+    var lleno = t >= 1;
+    salto.classList.toggle('lleno', lleno);
+    html.classList.toggle('salto-lleno', activo && p > .45 && subir < .35);
+    saltoCuadro.style.opacity = lleno ? 0 : 1;
+    saltoLleno.style.setProperty('--lift', subir.toFixed(4));
+    saltoLleno.style.setProperty('--to', suave(limitar((p - .62) / .18, 0, 1)).toFixed(3));
+    return activo;
+  }
+  evaluarSalto();
+  window.addEventListener('load', evaluarSalto);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(evaluarSalto);
 
   // ---------- 6. Proyectos: carrete horizontal ----------
   var reel = document.querySelector('.reel');
@@ -817,6 +901,8 @@
   var waFlotante = document.querySelector('.wa-flotante');
   var contacto = document.getElementById('contacto');
   var zonasConToques = document.querySelectorAll('.pliegos, .reel__carrete');
+  var riel = document.querySelector('.riel');
+  var rielValor = riel && riel.querySelector('.riel__valor');
   var sobre = document.querySelector('.sobre');
   var sobreFoto = document.querySelector('.sobre__foto img');
   var pasos = document.querySelector('.pasos');
@@ -873,6 +959,12 @@
     }
 
     moverReel();
+    var enSalto = moverSalto(y);
+    if (riel) {
+      riel.style.setProperty('--p', alto > 0 ? (y / alto).toFixed(4) : 0);
+      rielValor.textContent = Math.round(alto > 0 ? y / alto * 100 : 0) + '%';
+      html.classList.toggle('riel-visible', !enSalto && y > (pin ? pin.offsetHeight : vh) - vh * .2);
+    }
 
     if (!quieto) {
       if (sobre && sobreFoto) {
@@ -899,7 +991,7 @@
   }
   function pedirCuadro() { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }
   window.addEventListener('scroll', pedirCuadro, { passive: true });
-  window.addEventListener('resize', function () { medirReel(); pedirCuadro(); });
+  window.addEventListener('resize', function () { medirReel(); evaluarSalto(); pedirCuadro(); });
   alScroll();
 
   // ---------- 12. Cursor propio + botón magnético (solo computador) ----------

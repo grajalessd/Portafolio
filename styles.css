@@ -1132,21 +1132,60 @@ strong { font-weight: 650; }
 @media (min-width: 1024px) { .marca-liquida--pie .marca-liquida__texto { font-size: min(13.4vw, 11.5rem); } }
 
 
-/* ---------- La idea en 3D (escena.js) y el riel "boceto → realidad" ---------- */
-.escena { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
-main, .pie { position: relative; z-index: 1; }
-@media (max-width: 1023px) { .escena { opacity: .45; } }
+/* ---------- Paso por el punto del logo ----------
+   La portada se queda quieta y el punto lima crece hasta llenar la pantalla;
+   luego el lima sube como un telón y aparecen los proyectos. */
+.con-salto .portada-pin { height: calc(100svh + 95vh); }
+.con-salto .portada { position: sticky; top: 0; height: 100svh; min-height: 0; }
+.con-salto .marca-liquida__lienzo, .con-salto .portada__cuerpo { will-change: transform, opacity; }
 
+/* Mientras la pantalla está toda lima, el encabezado se esconde para no ensuciar el color */
+.salto-lleno .encabezado { transform: translateY(-100%); }
+.salto-lleno .progreso { opacity: 0; }
+.salto { position: fixed; inset: 0; z-index: 60; pointer-events: none; visibility: hidden; overflow: hidden; }
+.salto.activo { visibility: visible; }
+.salto__cuadro {
+  position: absolute; left: 0; top: 0;
+  width: var(--pw, 20px); height: var(--ph, 20px);
+  background: var(--lima);
+  transform: translate(var(--px, 0px), var(--py, 0px)) scale(var(--ps, 1));
+  transform-origin: center;
+}
+.salto__lleno {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  background: var(--lima);
+  opacity: 0;
+  clip-path: inset(0 0 calc(var(--lift, 0) * 100%) 0);
+}
+.salto.lleno .salto__lleno { opacity: 1; }
+.salto__texto {
+  margin: 0; padding: 0 var(--margen);
+  font-family: var(--titulos); font-stretch: 125%; font-weight: 800;
+  font-size: clamp(2.6rem, 9vw, 8rem); line-height: .92; letter-spacing: -0.045em;
+  color: var(--noche); text-align: center;
+  opacity: var(--to, 0);
+  transform: translateY(calc((1 - var(--to, 0)) * 60px + var(--lift, 0) * -30vh));
+}
+
+/* Celular: la portada debe caber en una pantalla para poder quedarse quieta */
+@media (max-width: 1023px) {
+  .con-salto .polaroid--portada { width: 50%; }
+  .con-salto .portada__botones { flex-wrap: nowrap; }
+  .con-salto .portada__botones .boton { padding: 0 14px; font-size: .95rem; }
+}
+
+/* ---------- Riel "boceto → realidad" (computador) ---------- */
 .riel { display: none; }
 @media (min-width: 1024px) {
-  .con-escena .riel {
+  .riel {
     position: fixed; z-index: 90; right: 18px; top: 50%;
     height: 44vh; transform: translateY(-50%);
     display: flex; flex-direction: column; align-items: center; gap: 10px;
     pointer-events: none;
     opacity: 0; transition: opacity .8s ease;
   }
-  .con-escena .encabezado.con-fondo ~ .riel, .con-escena.riel-visible .riel { opacity: 1; }
+  .riel-visible .riel { opacity: 1; }
   .riel__tope {
     font-family: var(--mano); font-weight: 700; font-size: 1.1rem; line-height: 1;
     color: var(--arena);
