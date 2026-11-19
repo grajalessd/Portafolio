@@ -291,7 +291,8 @@
       ctx.globalAlpha = 1;
 
       if (!armado && transcurrido > 1400) armado = true;
-      if (quieto || (armado && !raton.dentro && energia < n * 0.02 && Math.abs(p - ultimoP) < 0.0005) || !visible) {
+      // Se duerme cuando todo está quieto (aunque el mouse siga encima: al moverlo, despierta)
+      if (quieto || (armado && energia < n * 0.02 && Math.abs(p - ultimoP) < 0.0005) || !visible) {
         corriendo = false;
       } else {
         requestAnimationFrame(cuadro);
@@ -321,7 +322,11 @@
     window.addEventListener('scroll', function () { if (visible) despertar(); }, { passive: true });
 
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; if (visible) despertar(); }).observe(seccion);
+      new IntersectionObserver(function (e) {
+        visible = e[0].isIntersecting;
+        seccion.classList.toggle('fuera', !visible); // pausa el aura cuando no se ve
+        if (visible) despertar();
+      }).observe(seccion);
     }
     var espera;
     window.addEventListener('resize', function () {
@@ -648,16 +653,22 @@
     var visible = false, corriendo = false, px = -1, estado = letras.map(function () { return { w: 900, a: 125 }; });
     function cuadro(t) {
       var cerca = punteroFino && px >= 0;
+      // Primero se miden todas las letras y después se cambian (una sola medición por cuadro)
+      var centros = cerca ? letras.map(function (l) { var r = l.getBoundingClientRect(); return r.left + r.width / 2; }) : null;
       letras.forEach(function (l, i) {
-        var r = l.getBoundingClientRect(), centro = r.left + r.width / 2;
         var k;
-        if (cerca) k = Math.max(0, 1 - Math.abs(px - centro) / (window.innerWidth * 0.28));
+        if (cerca) k = Math.max(0, 1 - Math.abs(px - centros[i]) / (window.innerWidth * 0.28));
         else k = (Math.sin(t / 700 - i * 0.9) + 1) / 2 * 0.85; // en el celular respiran solas
         var w = 900 - k * 620, a = 125 - k * 55;
         estado[i].w += (w - estado[i].w) * 0.12;
         estado[i].a += (a - estado[i].a) * 0.12;
-        l.style.setProperty('--w', estado[i].w.toFixed(1));
-        l.style.setProperty('--a', estado[i].a.toFixed(1));
+        // Solo se toca la letra si el cambio se nota (redibujar texto es lo más caro)
+        var w1 = estado[i].w.toFixed(0), a1 = estado[i].a.toFixed(1);
+        if (w1 !== estado[i].w0 || a1 !== estado[i].a0) {
+          estado[i].w0 = w1; estado[i].a0 = a1;
+          l.style.setProperty('--w', w1);
+          l.style.setProperty('--a', a1);
+        }
       });
       if (visible) requestAnimationFrame(cuadro); else corriendo = false;
     }

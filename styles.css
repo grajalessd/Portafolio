@@ -218,6 +218,7 @@ html[data-tema="lima"] .boton--cabeza { background: var(--noche); color: var(--l
   animation: deriva 16s ease-in-out infinite alternate;
 }
 .heroe__aura span + span { background: radial-gradient(closest-side, rgba(243, 238, 228, .07), transparent 70%); width: 55vmax; height: 55vmax; margin: -27vmax 0 0 -27vmax; animation-duration: 21s; animation-direction: alternate-reverse; }
+.heroe.fuera .heroe__aura span { animation-play-state: paused; }
 @keyframes deriva { from { translate: -18vw -8vh; } to { translate: 18vw 10vh; } }
 
 .heroe__marca { position: relative; z-index: 1; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 26vh; }
@@ -304,8 +305,10 @@ html:not(.js) .w { opacity: 1; }
 .caso__info { display: grid; gap: 22px; align-content: start; justify-items: start; }
 .caso__datos { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: .92rem; font-weight: 600; color: color-mix(in srgb, var(--c-tinta) 70%, transparent); }
 .estado { display: inline-flex; align-items: center; gap: .5em; color: var(--c-acento); }
-.estado__punto { width: 9px; height: 9px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 0 currentColor; animation: latido 2s infinite; }
-@keyframes latido { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 60%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+/* El latido es un anillo que crece y se desvanece (transform + opacity: no obliga a repintar) */
+.estado__punto { position: relative; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.estado__punto::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: currentColor; opacity: .6; animation: latido 2s infinite; will-change: transform, opacity; }
+@keyframes latido { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(3.6); opacity: 0; } }
 .caso__nombre { font-size: clamp(2.2rem, 4.3vw, 5.2rem); font-weight: 900; font-stretch: 112%; text-transform: uppercase; line-height: .94; letter-spacing: -.02em; }
 .caso__texto { max-width: 42ch; color: color-mix(in srgb, var(--c-tinta) 78%, transparent); }
 
@@ -582,10 +585,10 @@ main > section, main > div, .pie { overflow-x: clip; }
    ========================================================= */
 /* Encabezado: logo y menú en recuadros oscuros para que nunca choquen con el fondo */
 .encabezado { color: var(--crema); }
-.marca { padding: 10px 14px 9px 15px; border-radius: 12px; background: rgba(15, 15, 14, .86); border: 1px solid rgba(243, 238, 228, .12); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.marca { padding: 10px 14px 9px 15px; border-radius: 12px; background: rgba(15, 15, 14, .93); border: 1px solid rgba(243, 238, 228, .12); }
 .marca i { background: var(--lima); }
 @media (min-width: 1024px) {
-  .menu { gap: 0; padding: 4px; border-radius: 12px; background: rgba(15, 15, 14, .86); border: 1px solid rgba(243, 238, 228, .12); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .menu { gap: 0; padding: 4px; border-radius: 12px; background: rgba(15, 15, 14, .93); border: 1px solid rgba(243, 238, 228, .12); }
   .menu a { margin: 8px 14px; }
 }
 
