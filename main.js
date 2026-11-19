@@ -377,223 +377,126 @@
     window.addEventListener('resize', function () { if (soloBarraCelular('foto')) return; clearTimeout(redimensionar); redimensionar = setTimeout(function () { if (portada.classList.contains('gl')) medir(); }, 150); });
   })();
 
-  // ---------- 5b. Logo gigante en "metal líquido" (WebGL) ----------
-  // Se dibuja el texto en un lienzo, se calcula su relieve y un shader lo pinta como cromo
-  // con luces crema, lima y coral. Se llena como un líquido y se deforma donde lo tocan.
-  function marcaLiquida(cont, alArrancar) {
-    var lienzo = cont.querySelector('canvas');
-    var gl = lienzo.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false });
-    if (!gl || quieto) return;
+  // ---------- 5b. Logo vivo: tipografía elástica ----------
+  // "grajalessd." usa la fuente variable Archivo: cada letra cambia de ancho y grosor en vivo.
+  // En reposo las letras son finas y en contorno (boceto); una "lupa" de luz recorre la palabra
+  // y las letras por donde pasa se ensanchan, engrosan y se llenan (crema y lima en el centro).
+  // Con el mouse o el dedo se mueve la lupa; al empezar a bajar, todas se vuelven "realidad".
+  function marcaViva(cont, opciones) {
+    var texto = cont.querySelector('.marca-liquida__texto');
+    if (!texto) return;
+    opciones = opciones || {};
+    var palabra = 'grajalessd';
+    texto.textContent = '';
+    var letras = [];
+    Array.prototype.forEach.call(palabra, function (c) {
+      var s = document.createElement('span'); s.className = 'mv'; s.textContent = c;
+      texto.appendChild(s); letras.push(s);
+    });
+    var punto = document.createElement('i'); punto.className = 'mv mv--punto'; punto.textContent = '.';
+    texto.appendChild(punto); letras.push(punto);
+    cont.classList.add('viva');
+    var n = letras.length;
+    var estado = letras.map(function () { return 0; });
+    var aplicado = letras.map(function () { return -1; });
 
-    var vert = 'attribute vec2 p; varying vec2 v; void main(){ v = p * .5 + .5; gl_Position = vec4(p, 0., 1.); }';
-    var frag = [
-      'precision mediump float;',
-      'uniform sampler2D uMask; uniform sampler2D uAlto;',
-      'uniform vec2 uRes; uniform vec2 uRaton; uniform float uTiempo; uniform float uLleno; uniform float uFuerza;',
-      'varying vec2 v;',
-      'float hash(vec2 q){ return fract(sin(dot(q, vec2(127.1, 311.7))) * 43758.5453); }',
-      'float ruido(vec2 q){ vec2 i = floor(q), f = fract(q); f = f*f*(3.-2.*f);',
-      '  return mix(mix(hash(i), hash(i+vec2(1,0)), f.x), mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), f.x), f.y); }',
-      'float relieve(vec2 p){ vec4 a = texture2D(uAlto, p); vec4 m = texture2D(uMask, p); return (a.r + a.g) * .88 + (m.r + m.g) * .12; }',
-      'void main(){',
-      '  vec2 uv = vec2(v.x, 1. - v.y);',
-      '  float asp = uRes.x / uRes.y;',
-      // el líquido fluye despacio
-      '  vec2 q = uv * vec2(asp * .55, 1.) * 2.4;',
-      '  vec2 flujo = vec2(ruido(q + vec2(uTiempo * .22, 0.)), ruido(q + vec2(5.2, uTiempo * .17))) - .5;',
-      // ondas donde está el mouse o el dedo
-      '  vec2 dm = (uv - uRaton) * vec2(asp, 1.);',
-      '  float r = length(dm);',
-      '  float cerca = exp(-r * r * 6.) * uFuerza;',
-      '  float onda = sin(r * 26. - uTiempo * 7.) * cerca;',
-      '  vec2 u = uv + flujo * .005 + (dm / max(r, .001)) * onda * .006 / vec2(asp, 1.);',
-      '  vec4 mk = texture2D(uMask, u);',
-      '  float alfa = smoothstep(.3, .7, mk.r + mk.g);',
-      '  float punto = smoothstep(.3, .7, mk.g);',
-      // relieve -> normal
-      '  vec2 px = 5. / uRes;',
-      '  float hl = relieve(u - vec2(px.x, 0.)), hr = relieve(u + vec2(px.x, 0.));',
-      '  float hd = relieve(u + vec2(0., px.y)), hu = relieve(u - vec2(0., px.y));',
-      '  vec3 N = normalize(vec3((hl - hr) * 3.4, (hd - hu) * 3.4, 1.));',
-      '  N = normalize(N + vec3(dm * cerca * 1.2 + onda * .18, 0.));',
-      // acabado satinado crema (sin brillos metálicos): volumen suave + luz lima que sigue al mouse
-      '  vec3 crema = vec3(.953,.933,.894), lima = vec3(.831,.969,.353);',
-      '  float luz = clamp(dot(N, normalize(vec3(-.3, .55, .78))), 0., 1.);',
-      '  vec3 c = crema * (.78 + .22 * luz);',
-      '  c *= 1. - (1. - clamp(N.z, 0., 1.)) * .3;',
-      '  float brillo = exp(-r * r * 3.) * (.5 + uFuerza * .5);',
-      '  c = mix(c, lima, brillo * .8);',
-      '  c += crema * .07 * pow(max(0., sin(uv.x * 2.6 - uv.y * .8 - uTiempo * .55)), 10.);',
-      '  c = mix(c, lima * (.85 + .15 * luz), punto);',
-      // se llena como un líquido de abajo hacia arriba
-      '  float desde = 1. - uv.y;',
-      '  float sup = uLleno * 1.3 - .15 + (sin(uv.x * 16. + uTiempo * 3.2) * .03 + sin(uv.x * 6. - uTiempo * 2.1) * .03) * (1. - uLleno);',
-      '  float lleno = 1. - smoothstep(sup - .02, sup + .02, desde);',
-      '  float borde = (1. - smoothstep(0., .04, abs(desde - sup))) * (1. - uLleno) * alfa;',
-      '  alfa *= lleno;',
-      '  c += lima * borde * 1.4;',
-      '  gl_FragColor = vec4(c * alfa + lima * borde * .6, max(alfa, borde * .8));',
-      '}'
-    ].join('\n');
-
-    function compilar(tipo, src) {
-      var sh = gl.createShader(tipo); gl.shaderSource(sh, src); gl.compileShader(sh);
-      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh));
-      return sh;
-    }
-    var prog;
-    try {
-      prog = gl.createProgram();
-      gl.attachShader(prog, compilar(gl.VERTEX_SHADER, vert));
-      gl.attachShader(prog, compilar(gl.FRAGMENT_SHADER, frag));
-      gl.linkProgram(prog);
-      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error('link');
-    } catch (e) { return; }
-    gl.useProgram(prog);
-    var buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    var loc = gl.getAttribLocation(prog, 'p');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    function textura(unidad) {
-      var tx = gl.createTexture();
-      gl.activeTexture(gl.TEXTURE0 + unidad);
-      gl.bindTexture(gl.TEXTURE_2D, tx);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      return tx;
-    }
-    var texMask = textura(0), texAlto = textura(1);
-    var U = {};
-    ['uMask', 'uAlto', 'uRes', 'uRaton', 'uTiempo', 'uLleno', 'uFuerza'].forEach(function (k) { U[k] = gl.getUniformLocation(prog, k); });
-    gl.uniform1i(U.uMask, 0); gl.uniform1i(U.uAlto, 1);
-
-    var mascara = document.createElement('canvas'), alto = document.createElement('canvas'), chico = document.createElement('canvas');
-
-    function fuente(ctx, fs) {
-      ctx.font = '800 ' + fs + 'px Archivo, sans-serif';
-      if ('fontStretch' in ctx) ctx.fontStretch = 'expanded';
-      if ('letterSpacing' in ctx) ctx.letterSpacing = (-0.05 * fs).toFixed(2) + 'px';
-    }
-    function dibujar() {
-      var dpr = Math.min(window.devicePixelRatio || 1, punteroFino ? 2 : 1.5);
-      var W = Math.round(cont.getBoundingClientRect().width * dpr);
-      if (W < 10) return false;
-      var m = mascara.getContext('2d');
-      fuente(m, 100);
-      var palabra = m.measureText('grajalessd'), todo = m.measureText('grajalessd.');
-      var escala = W * .985 / todo.width, fs = 100 * escala;
-      var sube = Math.max(todo.actualBoundingBoxAscent || 76, 60) * escala;
-      var baja = Math.max(todo.actualBoundingBoxDescent || 22, 10) * escala;
-      var aire = fs * .07;
-      var H = Math.ceil(sube + baja + aire * 2);
-      mascara.width = W; mascara.height = H;
-      m = mascara.getContext('2d'); fuente(m, fs);
-      m.fillStyle = '#000'; m.fillRect(0, 0, W, H);
-      var x0 = (W - todo.width * escala) / 2, base = aire + sube;
-      m.fillStyle = '#ff0000'; m.fillText('grajalessd', x0, base);
-      m.fillStyle = '#00ff00'; m.fillText('.', x0 + palabra.width * escala, base);
-      // dónde queda el punto (en fracciones del lienzo): de ahí crece el lima al bajar
-      var pm = m.measureText('.'), px0 = x0 + palabra.width * escala;
-      var pl = pm.actualBoundingBoxLeft || 0, pr = pm.actualBoundingBoxRight || fs * .25;
-      var pa = pm.actualBoundingBoxAscent || fs * .2, pd = pm.actualBoundingBoxDescent || 0;
-      cont._punto = { x: (px0 - pl) / W, y: (base - pa) / H, w: (pl + pr) / W, h: (pa + pd) / H };
-      // relieve: el mismo texto muy desenfocado (bajar y subir de tamaño en varios pasos = desenfoque suave)
-      alto.width = W; alto.height = H;
-      var pasos = [3, 9, 22], lienzos = [mascara];
-      pasos.forEach(function (d, i) {
-        var c = document.createElement('canvas');
-        c.width = Math.max(4, Math.round(W / d)); c.height = Math.max(3, Math.round(H / d));
-        var cx = c.getContext('2d'); cx.imageSmoothingEnabled = true; cx.imageSmoothingQuality = 'high';
-        cx.drawImage(lienzos[i], 0, 0, c.width, c.height);
-        lienzos.push(c);
-      });
-      for (var k = lienzos.length - 1; k > 1; k--) {
-        var dst = lienzos[k - 1], dx = dst.getContext('2d');
-        dx.imageSmoothingEnabled = true; dx.imageSmoothingQuality = 'high';
-        dx.globalAlpha = .6; dx.drawImage(lienzos[k], 0, 0, dst.width, dst.height); dx.globalAlpha = 1;
-      }
-      var a = alto.getContext('2d'); a.imageSmoothingEnabled = true; a.imageSmoothingQuality = 'high';
-      a.drawImage(lienzos[1], 0, 0, W, H);
-
-      lienzo.width = W; lienzo.height = H;
-      gl.viewport(0, 0, W, H);
-      gl.uniform2f(U.uRes, W, H);
-      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, texMask);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, mascara);
-      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, texAlto);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, alto);
-      cont.style.setProperty('--ar', (W / H).toFixed(4));
-      cont.classList.add('gl');
-      return true;
+    function pintarLetra(i, s) {
+      var el = letras[i];
+      var w = 64 + s * 61;           // ancho: 64 (condensada) → 125 (expandida)
+      var g = 260 + s * 640;         // grosor: 260 (fina) → 900 (negra)
+      el.style.fontVariationSettings = '"wdth" ' + w.toFixed(1) + ', "wght" ' + g.toFixed(0);
+      var relleno = limitar((s - .3) / .22, 0, 1);
+      var lima = el === punto ? 1 : limitar((s - .62) / .32, 0, 1);
+      el.style.setProperty('--f', relleno.toFixed(3));
+      el.style.setProperty('--l', lima.toFixed(3));
+      el.style.setProperty('--s', s.toFixed(3));
     }
 
-    // Mouse / dedo
-    var raton = [.5, .5], objetivo = [.5, .5], fuerza = 0, fuerzaObj = 0, tocando = false;
-    function apuntar(x, y, dentroDe) {
-      var r = cont.getBoundingClientRect();
-      objetivo = [(x - r.left) / r.width, (y - r.top) / r.height];
-      var margen = dentroDe || 0;
-      fuerzaObj = (x > r.left - margen && x < r.right + margen && y > r.top - margen && y < r.bottom + margen) ? 1 : 0;
+    // tamaño: con todas las letras "completas", la palabra ocupa el ancho disponible
+    function ajustar() {
+      letras.forEach(function (el, i) { pintarLetra(i, 1); });
+      texto.style.fontSize = '100px';
+      var ancho = (letras[n - 1].getBoundingClientRect().right - letras[0].getBoundingClientRect().left) || 1;
+      var ocupa = opciones.ocupa || (punteroFino ? .985 : 1.12);
+      var fs = 100 * cont.clientWidth * ocupa / ancho;
+      texto.style.fontSize = fs.toFixed(2) + 'px';
+      letras.forEach(function (el, i) { pintarLetra(i, estado[i]); aplicado[i] = estado[i]; });
     }
-    window.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') apuntar(e.clientX, e.clientY, 60); }, { passive: true });
-    cont.addEventListener('touchstart', function (e) { tocando = true; apuntar(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    cont.addEventListener('touchmove', function (e) { apuntar(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
-    cont.addEventListener('touchend', function () { tocando = false; fuerzaObj = 0; });
 
-    var lleno = 0, visible = false, corriendo = false, t0 = performance.now(), llenando = null, cuadroPar = false, ultimoScroll = 0;
+    var centro = .5, objetivo = .5, sigma = .16, fuerzaMouse = 0, barrido = null, aparicion = 0, tocando = false;
+    var ultimoScroll = 0, par = false, visible = true, t0 = performance.now();
     window.addEventListener('scroll', function () { ultimoScroll = performance.now(); }, { passive: true });
-    function cuadro(ahora) {
-      if (!visible) { corriendo = false; return; }
-      // En el celular: mientras se baja la página o la pantalla está en lima, no se redibuja
-      // (el logo se mueve con CSS) y en reposo va a 30 cuadros por segundo. Así el scroll queda fluido.
-      if (html.classList.contains('salto-lleno') || (!punteroFino && !llenando && !tocando && (ahora - ultimoScroll < 220 || (cuadroPar = !cuadroPar)))) { requestAnimationFrame(cuadro); return; }
-      var t = (ahora - t0) / 1000;
-      // cuando nadie lo toca, la luz pasea sola
-      if (fuerzaObj === 0 && !tocando) { objetivo = [.5 + Math.sin(t * .4) * .45, .5 + Math.cos(t * .55) * .3]; }
-      raton[0] += (objetivo[0] - raton[0]) * .08; raton[1] += (objetivo[1] - raton[1]) * .08;
-      fuerza += (fuerzaObj - fuerza) * .06;
-      if (llenando) { var p = limitar((ahora - llenando) / 1700, 0, 1); lleno = suave(p); if (p >= 1) llenando = null; }
-      gl.uniform1f(U.uTiempo, t);
-      gl.uniform2f(U.uRaton, raton[0], raton[1]);
-      gl.uniform1f(U.uFuerza, fuerza);
-      gl.uniform1f(U.uLleno, lleno);
-      gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      requestAnimationFrame(cuadro);
+    function apuntar(x) {
+      var r = texto.getBoundingClientRect();
+      objetivo = limitar((x - r.left) / r.width, -.1, 1.1);
     }
-    function correr() { if (!corriendo && visible) { corriendo = true; requestAnimationFrame(cuadro); } }
+    cont.addEventListener('pointermove', function (e) { if (e.pointerType === 'mouse') { apuntar(e.clientX); fuerzaMouse = 1; } });
+    cont.addEventListener('pointerleave', function () { fuerzaMouse = 0; });
+    cont.addEventListener('touchstart', function (e) { tocando = true; apuntar(e.touches[0].clientX); fuerzaMouse = 1; }, { passive: true });
+    cont.addEventListener('touchmove', function (e) { apuntar(e.touches[0].clientX); }, { passive: true });
+    cont.addEventListener('touchend', function () { tocando = false; setTimeout(function () { if (!tocando) fuerzaMouse = 0; }, 1600); });
+
+    function cuadro(ahora) {
+      requestAnimationFrame(cuadro);
+      if (!visible || document.hidden) return;
+      var t = (ahora - t0) / 1000;
+      // al bajar desde la portada, todas las letras se vuelven "realidad"
+      var todo = opciones.todoAlBajar ? limitar(window.scrollY / (window.innerHeight * .07), 0, 1) : 0;
+      // en el celular: 30 cuadros por segundo en reposo y nada mientras se baja (el scroll va primero)
+      if (!punteroFino && !tocando && !barrido && todo === 0) {
+        if ((par = !par) || ahora - ultimoScroll < 160) return;
+      }
+      // dónde está la lupa
+      if (barrido) {
+        var p = limitar((ahora - barrido) / 2200, 0, 1);
+        centro = -.25 + suave(p) * 1.5; sigma = .22;
+        if (p >= 1) barrido = null;
+      } else if (fuerzaMouse > 0) {
+        centro += (objetivo - centro) * .14; sigma += (.13 - sigma) * .1;
+      } else {
+        objetivo = .5 + Math.sin(t * .45) * .48;
+        centro += (objetivo - centro) * .05; sigma += (.17 - sigma) * .05;
+      }
+      if (aparicion < 1) aparicion = Math.min(1, aparicion + .02);
+      for (var i = 0; i < n; i++) {
+        var x = (i + .5) / n;
+        var d = (x - centro) / sigma;
+        var meta = Math.exp(-d * d) * aparicion;
+        meta = Math.max(meta, todo * (punteroFino ? 1 : .78));
+        if (letras[i] === punto) meta = Math.max(meta, .55);
+        estado[i] += (meta - estado[i]) * (todo > 0 ? .3 : .16);
+        if (Math.abs(estado[i] - aplicado[i]) > .003) { pintarLetra(i, estado[i]); aplicado[i] = estado[i]; }
+      }
+    }
 
     var listo = function () {
-      if (!dibujar()) return;
-      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; correr(); }).observe(cont);
-      alArrancar(function () { llenando = performance.now(); });
-      var espera = null;
-      var claveMarca = 'marca' + Math.random();
-      soloBarraCelular(claveMarca);
-      window.addEventListener('resize', function () { if (soloBarraCelular(claveMarca)) return; clearTimeout(espera); espera = setTimeout(dibujar, 200); });
+      ajustar();
+      requestAnimationFrame(cuadro);
+      new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(cont);
+      if (opciones.alArrancar) opciones.alArrancar(function () { barrido = performance.now(); });
+      var clave = 'viva' + Math.random(), espera = null;
+      soloBarraCelular(clave);
+      window.addEventListener('resize', function () { if (soloBarraCelular(clave)) return; clearTimeout(espera); espera = setTimeout(ajustar, 150); });
     };
+    if (quieto) { letras.forEach(function (el, i) { estado[i] = 1; }); try { document.fonts.load('800 100px Archivo').then(ajustar, ajustar); } catch (e) { ajustar(); } return; }
     try { document.fonts.load('800 100px Archivo').then(listo, listo); } catch (e) { listo(); }
   }
 
   var marcaArriba = document.querySelector('.portada .marca-liquida');
-  if (marcaArriba) marcaLiquida(marcaArriba, function (llenar) {
+  if (marcaArriba) marcaViva(marcaArriba, { todoAlBajar: true, alArrancar: function (barrer) {
     if (html.classList.contains('con-intro')) {
       var revisar = setInterval(function () {
-        if (html.classList.contains('intro-arranca')) { clearInterval(revisar); setTimeout(llenar, 1550); }
+        if (html.classList.contains('intro-arranca')) { clearInterval(revisar); setTimeout(barrer, 1500); }
       }, 50);
-    } else { setTimeout(llenar, 150); }
-  });
+    } else { setTimeout(barrer, 200); }
+  } });
   var marcaPie = document.querySelector('.marca-liquida--pie');
-  if (marcaPie) marcaLiquida(marcaPie, function (llenar) {
+  if (marcaPie) marcaViva(marcaPie, { ocupa: .98, alArrancar: function (barrer) {
     var obsPie = new IntersectionObserver(function (e) {
-      if (e[0].isIntersecting) { obsPie.disconnect(); setTimeout(llenar, 200); }
+      if (e[0].isIntersecting) { obsPie.disconnect(); barrer(); }
     }, { threshold: .4 });
     obsPie.observe(marcaPie);
-  });
+  } });
 
   // ---------- 5c. "Sobre mí": polaroids sueltas ----------
   var pila = document.querySelector('.pila');
@@ -696,7 +599,6 @@
     salto.style.setProperty('--smax', (Math.hypot(window.innerWidth, vh) * 1.2 / Math.max(2, Math.min(d.w, d.h))).toFixed(2));
     marcaSalto.style.setProperty('--ox', d.ox.toFixed(2) + '%');
     marcaSalto.style.setProperty('--oy', d.oy.toFixed(2) + '%');
-    puntoListo = marcaSalto.classList.contains('gl') && !!marcaSalto._punto;
   }
 
   function evaluarSalto() {
@@ -739,7 +641,7 @@
     var activo = p > .1 && subir < 1;
     salto.classList.toggle('activo', activo);
     if (html.classList.contains('salto-css')) {
-      if (!puntoListo) fijarPunto();
+      if (p < .1 || !puntoListo) { fijarPunto(); puntoListo = p >= .1; }
       html.classList.toggle('salto-lleno', activo && p > .45 && subir < .35);
       return activo;
     }

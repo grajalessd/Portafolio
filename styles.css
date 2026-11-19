@@ -1097,6 +1097,23 @@ strong { font-weight: 650; }
 }
 
 
+/* ---------- Logo vivo: tipografía elástica (main.js 5b) ---------- */
+.marca-liquida.viva .marca-liquida__texto {
+  display: flex; justify-content: center; align-items: baseline;
+  line-height: 1; letter-spacing: -0.02em; font-stretch: normal;
+  padding: .02em 0 .1em;
+  color: var(--crema); -webkit-text-stroke: 0;
+}
+.marca-liquida--pie.viva .marca-liquida__texto { justify-content: flex-start; }
+.mv {
+  display: inline-block;
+  font-style: normal;
+  /* --f: cuánto relleno · --l: cuánto lima · --s: estado de la letra (0 boceto → 1 realidad) */
+  color: color-mix(in oklab, color-mix(in oklab, var(--lima) calc(var(--l, 0) * 100%), var(--crema)) calc(var(--f, 0) * 100%), transparent);
+  -webkit-text-stroke: max(1px, .011em) color-mix(in oklab, var(--crema) calc((1 - var(--f, 0)) * 80% + 10%), transparent);
+  transform: translateY(calc(var(--s, 0) * -2.5%));
+}
+
 /* ---------- Contador de la pantalla de carga (0 → 100 %) ---------- */
 @property --cuenta { syntax: "<integer>"; initial-value: 0; inherits: false; }
 .intro__conteo {
