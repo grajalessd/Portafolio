@@ -5,3 +5,9 @@ fotos/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Notas internas de diseño (no se publican)
+CLAUDE.md
+PRODUCT.md
+DESIGN.md
+.impeccable/
