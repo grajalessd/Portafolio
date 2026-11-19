@@ -1135,13 +1135,14 @@ strong { font-weight: 650; }
 /* ---------- Paso por el punto del logo ----------
    La portada se queda quieta y el punto lima crece hasta llenar la pantalla;
    luego el lima sube como un telón y aparecen los proyectos. */
-.con-salto .portada-pin { height: calc(100svh + 95vh); }
+.con-salto .portada-pin { height: calc(100svh + 95svh); }
 .con-salto .portada { position: sticky; top: 0; height: 100svh; min-height: 0; }
 .con-salto .marca-liquida__lienzo, .con-salto .portada__cuerpo { will-change: transform, opacity; }
 
 /* Mientras la pantalla está toda lima, el encabezado se esconde para no ensuciar el color */
 .salto-lleno .encabezado { transform: translateY(-100%); }
 .salto-lleno .progreso { opacity: 0; }
+.salto-lleno .wa-flotante { transform: translateY(150%); opacity: 0; }
 .salto { position: fixed; inset: 0; z-index: 60; pointer-events: none; visibility: hidden; overflow: hidden; }
 .salto.activo { visibility: visible; }
 .salto__cuadro {
@@ -1167,6 +1168,44 @@ strong { font-weight: 650; }
   opacity: var(--to, 0);
   transform: translateY(calc((1 - var(--to, 0)) * 60px + var(--lift, 0) * -30vh));
 }
+
+/* Versión movida por el navegador (scroll-driven): se pega al dedo, sin saltos en el celular */
+.salto-css .portada-pin { view-timeline: --pin block; }
+.salto-css .salto { visibility: visible; animation: salto-ver linear both; animation-timeline: --pin; animation-range: contain 10% exit 92%; }
+.salto-css .salto__cuadro {
+  transform: translate(var(--px), var(--py)) scale(1);
+  animation: salto-crecer both cubic-bezier(.55, 0, 1, .45), salto-quitar both steps(1, end);
+  animation-timeline: --pin, --pin;
+  animation-range: contain 10% contain 60%, contain 60% contain 61%;
+}
+.salto-css .salto__lleno {
+  opacity: 0; clip-path: inset(0 0 0 0);
+  animation: salto-llenar both steps(1, end), salto-subir both cubic-bezier(.65, 0, .35, 1);
+  animation-timeline: --pin, --pin;
+  animation-range: contain 59.5% contain 60%, exit 12% exit 90%;
+}
+.salto-css .salto__texto {
+  opacity: 0; transform: translateY(60px);
+  animation: salto-texto both cubic-bezier(.16, 1, .3, 1), salto-texto-sube both linear;
+  animation-timeline: --pin, --pin;
+  animation-range: contain 62% contain 82%, exit 12% exit 90%;
+}
+.salto-css .portada .marca-liquida__lienzo,
+.salto-css .portada .marca-liquida__texto {
+  transform-origin: var(--ox, 95%) var(--oy, 60%);
+  animation: salto-marca both cubic-bezier(.55, 0, 1, .45);
+  animation-timeline: --pin; animation-range: contain 10% contain 60%;
+}
+.salto-css .portada__cuerpo { animation: salto-cuerpo both linear; animation-timeline: --pin; animation-range: contain 10% contain 38%; }
+@keyframes salto-ver { 0% { opacity: 0; } 0.5%, 99.5% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes salto-crecer { to { transform: translate(var(--px), var(--py)) scale(var(--smax, 60)); } }
+@keyframes salto-quitar { from { opacity: 1; } to { opacity: 0; } }
+@keyframes salto-llenar { from { opacity: 0; } to { opacity: 1; } }
+@keyframes salto-subir { to { clip-path: inset(0 0 100% 0); } }
+@keyframes salto-texto { to { opacity: 1; transform: none; } }
+@keyframes salto-texto-sube { to { translate: 0 -30vh; } }
+@keyframes salto-marca { to { transform: scale(1.6); } }
+@keyframes salto-cuerpo { to { opacity: 0; transform: translateY(-50px) scale(.95); } }
 
 /* Celular: la portada debe caber en una pantalla para poder quedarse quieta */
 @media (max-width: 1023px) {

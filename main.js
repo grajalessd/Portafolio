@@ -11,6 +11,16 @@
   function limitar(n, a, b) { return Math.max(a, Math.min(b, n)); }
   function suave(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
 
+  // En el celular, al bajar se esconde la barra del navegador y cambia el alto de la pantalla.
+  // Eso no es un cambio real de tamaño: si el ancho es el mismo, no se vuelve a medir nada (evita saltos).
+  var anchosVistos = {};
+  function soloBarraCelular(clave) {
+    clave = clave || 'general';
+    var w = window.innerWidth, antes = anchosVistos[clave];
+    anchosVistos[clave] = w;
+    return !punteroFino && antes === w;
+  }
+
   // ---------- Congelar el fondo con el menú abierto (también en iPhone) ----------
   var bloqueado = false, guardado = 0, lenis = null;
   function bloquearScroll() {
@@ -203,7 +213,7 @@
     // Rastro del pincel: un lienzo pequeño que se va borrando solo
     var rastro = document.createElement('canvas');
     var rctx = rastro.getContext('2d');
-    var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    var dpr = Math.min(window.devicePixelRatio || 1, punteroFino ? 1.5 : 1.25);
     var ancho = 0, alto = 0;
 
     function medir() {
@@ -218,7 +228,7 @@
     }
 
     // Pinceladas: se dibujan como trazos continuos entre puntos
-    var ultimo = null, pintado = false;
+    var ultimo = null, pintado = false, ultimaPintura = 0;
     function pintar(x, y, fuerza) {
       var rx = x / ancho * rastro.width, ry = y / alto * rastro.height;
       var radio = rastro.width * (esComputador.matches ? .11 : .16);
@@ -233,7 +243,7 @@
         rctx.beginPath(); rctx.arc(px, py, radio, 0, Math.PI * 2); rctx.fill();
       }
       ultimo = [rx, ry];
-      pintado = true;
+      pintado = true; ultimaPintura = performance.now();
     }
     function soltarPincel() { ultimo = null; }
 
@@ -254,8 +264,14 @@
     });
     portada.addEventListener('pointerleave', soltarPincel);
     // Dedo: pinta mientras se arrastra (también mientras baja la página)
-    caja.addEventListener('touchstart', function (e) { if (!listo) return; var p = puntoDesde(e.touches[0]); ultimo = null; pintar(p[0], p[1], 1.2); alInteractuar(); }, { passive: true });
-    caja.addEventListener('touchmove', function (e) { if (!listo) return; var p = puntoDesde(e.touches[0]); pintar(p[0], p[1], 1.2); }, { passive: true });
+    // Si el dedo está bajando la página, no pinta (así el scroll en el celular se siente limpio)
+    var yToque = 0, pintandoDedo = false;
+    caja.addEventListener('touchstart', function (e) { if (!listo) return; yToque = window.scrollY; pintandoDedo = true; var p = puntoDesde(e.touches[0]); ultimo = null; pintar(p[0], p[1], 1.2); alInteractuar(); }, { passive: true });
+    caja.addEventListener('touchmove', function (e) {
+      if (!listo || !pintandoDedo) return;
+      if (Math.abs(window.scrollY - yToque) > 6) { pintandoDedo = false; soltarPincel(); return; }
+      var p = puntoDesde(e.touches[0]); pintar(p[0], p[1], 1.2);
+    }, { passive: true });
     caja.addEventListener('touchend', soltarPincel);
 
     // Estado de la animación
@@ -263,7 +279,10 @@
     var demo = null;
 
     function dibujar(ahora) {
-      if (!visible || document.hidden) { requestAnimationFrame(dibujar); return; }
+      if (!visible || document.hidden || html.classList.contains('salto-lleno')) { requestAnimationFrame(dibujar); return; }
+      // solo se redibuja cuando algo cambia (intro, demostración o pincel sanando): menos trabajo = scroll más fluido
+      var hayCambio = real < 1 || demo || (ahora - ultimaPintura) < 4000 || (punteroFino && Math.abs(velocidad) > .3);
+      if (!hayCambio) { yAnterior = window.scrollY; velocidad *= .8; requestAnimationFrame(dibujar); return; }
       // el rastro se borra poco a poco: la realidad "sana" sola
       rctx.globalCompositeOperation = 'source-over';
       rctx.fillStyle = 'rgba(0,0,0,0.02)';
@@ -290,7 +309,7 @@
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, rastro);
       gl.uniform1f(U.uTiempo, (ahora - inicio) / 1000);
       gl.uniform1f(U.uReal, real);
-      gl.uniform1f(U.uVel, limitar(velocidad, -40, 40));
+      gl.uniform1f(U.uVel, punteroFino ? limitar(velocidad, -40, 40) : 0);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       requestAnimationFrame(dibujar);
     }
@@ -355,7 +374,7 @@
       new IntersectionObserver(function (e) { visible = e[0].isIntersecting; }).observe(portada);
     }
     var redimensionar = null;
-    window.addEventListener('resize', function () { clearTimeout(redimensionar); redimensionar = setTimeout(function () { if (portada.classList.contains('gl')) medir(); }, 150); });
+    window.addEventListener('resize', function () { if (soloBarraCelular('foto')) return; clearTimeout(redimensionar); redimensionar = setTimeout(function () { if (portada.classList.contains('gl')) medir(); }, 150); });
   })();
 
   // ---------- 5b. Logo gigante en "metal líquido" (WebGL) ----------
@@ -396,20 +415,16 @@
       '  float hl = relieve(u - vec2(px.x, 0.)), hr = relieve(u + vec2(px.x, 0.));',
       '  float hd = relieve(u + vec2(0., px.y)), hu = relieve(u - vec2(0., px.y));',
       '  vec3 N = normalize(vec3((hl - hr) * 3.4, (hd - hu) * 3.4, 1.));',
-      '  N = normalize(N + vec3(flujo * .5 + dm * cerca * 1.6 + onda * .25, 0.));',
-      '  vec3 R = reflect(vec3(0., 0., -1.), N);',
-      // estudio de luces que se mueve con el mouse y el tiempo
-      '  vec2 e = R.xy + vec2((uRaton.x - .5) * .7 + sin(uTiempo * .35) * .25, (.5 - uRaton.y) * .4);',
-      '  vec3 crema = vec3(.953,.933,.894), lima = vec3(.831,.969,.353), coral = vec3(1.,.478,.349);',
-      '  vec3 c = mix(vec3(.03,.03,.028), vec3(.30,.30,.28), smoothstep(-.9, .9, e.y));',
-      '  c += crema * pow(clamp(1. - abs(e.y - .38) * 4.5, 0., 1.), 2.) * 1.15;',
-      '  c += crema * pow(clamp(1. - abs(e.x + .5) * 6., 0., 1.), 3.) * .65;',
-      '  c += lima * pow(clamp(1. - abs(e.y + .42) * 3.6, 0., 1.), 2.) * 1.05;',
-      '  c += coral * pow(clamp(1. - length(e - vec2(.62, .05)) * 2.8, 0., 1.), 2.) * .75;',
-      '  float fres = pow(1. - clamp(N.z, 0., 1.), 1.5);',
-      '  c = mix(c, lima, fres * .4);',
-      '  c *= vec3(.96, 1., .9);',
-      '  c = mix(c, c * vec3(.8, 1.05, .35) + lima * .3, punto);',
+      '  N = normalize(N + vec3(dm * cerca * 1.2 + onda * .18, 0.));',
+      // acabado satinado crema (sin brillos metálicos): volumen suave + luz lima que sigue al mouse
+      '  vec3 crema = vec3(.953,.933,.894), lima = vec3(.831,.969,.353);',
+      '  float luz = clamp(dot(N, normalize(vec3(-.3, .55, .78))), 0., 1.);',
+      '  vec3 c = crema * (.78 + .22 * luz);',
+      '  c *= 1. - (1. - clamp(N.z, 0., 1.)) * .3;',
+      '  float brillo = exp(-r * r * 3.) * (.5 + uFuerza * .5);',
+      '  c = mix(c, lima, brillo * .8);',
+      '  c += crema * .07 * pow(max(0., sin(uv.x * 2.6 - uv.y * .8 - uTiempo * .55)), 10.);',
+      '  c = mix(c, lima * (.85 + .15 * luz), punto);',
       // se llena como un líquido de abajo hacia arriba
       '  float desde = 1. - uv.y;',
       '  float sup = uLleno * 1.3 - .15 + (sin(uv.x * 16. + uTiempo * 3.2) * .03 + sin(uv.x * 6. - uTiempo * 2.1) * .03) * (1. - uLleno);',
@@ -464,7 +479,7 @@
       if ('letterSpacing' in ctx) ctx.letterSpacing = (-0.05 * fs).toFixed(2) + 'px';
     }
     function dibujar() {
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var dpr = Math.min(window.devicePixelRatio || 1, punteroFino ? 2 : 1.5);
       var W = Math.round(cont.getBoundingClientRect().width * dpr);
       if (W < 10) return false;
       var m = mascara.getContext('2d');
@@ -529,9 +544,13 @@
     cont.addEventListener('touchmove', function (e) { apuntar(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
     cont.addEventListener('touchend', function () { tocando = false; fuerzaObj = 0; });
 
-    var lleno = 0, visible = false, corriendo = false, t0 = performance.now(), llenando = null;
+    var lleno = 0, visible = false, corriendo = false, t0 = performance.now(), llenando = null, cuadroPar = false, ultimoScroll = 0;
+    window.addEventListener('scroll', function () { ultimoScroll = performance.now(); }, { passive: true });
     function cuadro(ahora) {
       if (!visible) { corriendo = false; return; }
+      // En el celular: mientras se baja la página o la pantalla está en lima, no se redibuja
+      // (el logo se mueve con CSS) y en reposo va a 30 cuadros por segundo. Así el scroll queda fluido.
+      if (html.classList.contains('salto-lleno') || (!punteroFino && !llenando && !tocando && (ahora - ultimoScroll < 220 || (cuadroPar = !cuadroPar)))) { requestAnimationFrame(cuadro); return; }
       var t = (ahora - t0) / 1000;
       // cuando nadie lo toca, la luz pasea sola
       if (fuerzaObj === 0 && !tocando) { objetivo = [.5 + Math.sin(t * .4) * .45, .5 + Math.cos(t * .55) * .3]; }
@@ -553,7 +572,9 @@
       new IntersectionObserver(function (e) { visible = e[0].isIntersecting; correr(); }).observe(cont);
       alArrancar(function () { llenando = performance.now(); });
       var espera = null;
-      window.addEventListener('resize', function () { clearTimeout(espera); espera = setTimeout(dibujar, 200); });
+      var claveMarca = 'marca' + Math.random();
+      soloBarraCelular(claveMarca);
+      window.addEventListener('resize', function () { if (soloBarraCelular(claveMarca)) return; clearTimeout(espera); espera = setTimeout(dibujar, 200); });
     };
     try { document.fonts.load('800 100px Archivo').then(listo, listo); } catch (e) { listo(); }
   }
@@ -661,13 +682,32 @@
   var lienzoMarca = marcaSalto && marcaSalto.querySelector('.marca-liquida__lienzo');
   var textoMarca = marcaSalto && marcaSalto.querySelector('.marca-liquida__texto');
   var cuerpoPortada = document.querySelector('.portada__cuerpo');
-  var saltoActivo = false;
+  var saltoActivo = false, puntoListo = false;
+  // Medidas del punto (relativas a la portada, que está quieta) para la animación por CSS
+  function fijarPunto() {
+    var d = puntoEnPantalla();
+    if (!d) return;
+    var pr = portada.getBoundingClientRect();
+    var vh = window.innerHeight;
+    salto.style.setProperty('--px', d.x.toFixed(1) + 'px');
+    salto.style.setProperty('--py', (d.y - pr.top).toFixed(1) + 'px');
+    salto.style.setProperty('--pw', d.w.toFixed(1) + 'px');
+    salto.style.setProperty('--ph', d.h.toFixed(1) + 'px');
+    salto.style.setProperty('--smax', (Math.hypot(window.innerWidth, vh) * 1.2 / Math.max(2, Math.min(d.w, d.h))).toFixed(2));
+    marcaSalto.style.setProperty('--ox', d.ox.toFixed(2) + '%');
+    marcaSalto.style.setProperty('--oy', d.oy.toFixed(2) + '%');
+    puntoListo = marcaSalto.classList.contains('gl') && !!marcaSalto._punto;
+  }
 
   function evaluarSalto() {
     if (!pin || !salto || quieto) return;
     html.classList.add('con-salto');
     // solo si la portada cabe en una pantalla (para poder quedarse quieta)
     saltoActivo = portada.scrollHeight <= window.innerHeight + 4;
+    // Si el navegador sabe animar con el scroll (casi todos hoy), lo mueve él mismo: más fluido en el celular
+    var cssScroll = saltoActivo && window.CSS && CSS.supports('animation-timeline: view()');
+    html.classList.toggle('salto-css', !!cssScroll);
+    puntoListo = false;
     if (!saltoActivo) {
       html.classList.remove('con-salto');
       salto.classList.remove('activo', 'lleno');
@@ -698,6 +738,11 @@
     var subir = suave(limitar((y - y1) / (y2 - y1), 0, 1));
     var activo = p > .1 && subir < 1;
     salto.classList.toggle('activo', activo);
+    if (html.classList.contains('salto-css')) {
+      if (!puntoListo) fijarPunto();
+      html.classList.toggle('salto-lleno', activo && p > .45 && subir < .35);
+      return activo;
+    }
 
     var d = puntoEnPantalla();
     if (d) {
@@ -772,11 +817,18 @@
     carrete.addEventListener('scroll', moverReel, { passive: true });
     esComputador.addEventListener('change', function () { medirReel(); moverReel(); });
     // Con teclado: si el foco cae en un proyecto, la página baja hasta que se vea
+    // (Solo con teclado: con el mouse no debe mover nada, si no el clic se pierde.)
     pista.addEventListener('focusin', function (e) {
       if (!esComputador.matches || recorrido <= 0) return;
+      if (!e.target.matches(':focus-visible')) return;
       var panel = e.target.closest('.caso, .proximo');
       if (!panel) return;
-      var destino = limitar(panel.offsetLeft + carrete.offsetLeft - window.innerWidth * .06, 0, recorrido);
+      // si el proyecto ya se ve completo, no hace falta moverse
+      var rp = panel.getBoundingClientRect();
+      if (rp.left >= 0 && rp.right <= window.innerWidth) return;
+      // posición natural del proyecto dentro del carrete (sin el desplazamiento actual)
+      var actual = -(parseFloat(pista.style.getPropertyValue('--rx')) || 0);
+      var destino = limitar(actual + rp.left - window.innerWidth * .06, 0, recorrido);
       var y = reel.getBoundingClientRect().top + window.scrollY + destino;
       if (lenis) lenis.scrollTo(y, { immediate: true }); else window.scrollTo(0, y);
     });
@@ -991,7 +1043,8 @@
   }
   function pedirCuadro() { if (!pendiente) { pendiente = true; requestAnimationFrame(alScroll); } }
   window.addEventListener('scroll', pedirCuadro, { passive: true });
-  window.addEventListener('resize', function () { medirReel(); evaluarSalto(); pedirCuadro(); });
+  soloBarraCelular('pagina');
+  window.addEventListener('resize', function () { if (!soloBarraCelular('pagina')) { medirReel(); evaluarSalto(); } pedirCuadro(); });
   alScroll();
 
   // ---------- 12. Cursor propio + botón magnético (solo computador) ----------
