@@ -25,8 +25,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link id="fuentes" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Caveat:wght@500..700&display=swap" rel="stylesheet" media="print" onload="this.media='all'; if (window.alCargarFuentes) window.alCargarFuentes();">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Caveat:wght@500..700&display=swap" rel="stylesheet"></noscript>
+  <link id="fuentes" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Caveat:wght@500..700&family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'; if (window.alCargarFuentes) window.alCargarFuentes();">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Caveat:wght@500..700&family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@500;600&display=swap" rel="stylesheet"></noscript>
 
   <link rel="stylesheet" href="styles.css">
   <script>
@@ -236,7 +236,8 @@
       <div class="casos">
 
         <!-- PROYECTO: Valientte (terminado) -->
-        <article class="caso" style="--c-fondo:#0C2A21; --c-tinta:#F3EEE4; --c-acento:#D4F75A" aria-labelledby="caso-valientte">
+        <!-- Colores y letras del manual de marca de Valientte: arena #E6D4BE, negro #030303, caramelo #946038 · Playfair Display + Montserrat -->
+        <article class="caso caso--valientte" style="--c-fondo:#E6D4BE; --c-tinta:#030303; --c-acento:#946038" aria-labelledby="caso-valientte">
           <div class="caso__interior">
             <div class="caso__info">
               <p class="caso__datos">
@@ -244,12 +245,12 @@
                 <span class="caso__tipo">Joyería</span>
               </p>
               <h3 class="caso__nombre" id="caso-valientte">Valientte</h3>
-              <p class="caso__texto">Una joyería en plata 925 y esmeraldas, con una vitrina que se recorre con el dedo, pedidos listos para enviar por WhatsApp e Instagram presente en todo el recorrido.</p>
+              <p class="caso__texto">Plata 925, esmeraldas colombianas y oro laminado 18k. Una vitrina que se recorre con el dedo, una bolsa que arma el pedido y lo envía por WhatsApp, e Instagram presente en todo el recorrido.</p>
               <div class="pestanas" role="group" aria-label="Pantallas de Valientte">
-                <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-1.jpg" data-movil="img/valientte-movil-1.jpg" data-nombre="portada">Portada</button>
-                <button type="button" class="pestana" aria-pressed="true" data-pc="img/valientte-pc-2.jpg" data-movil="img/valientte-movil-2.jpg" data-nombre="colecciones">Colecciones</button>
-                <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-3.jpg" data-movil="img/valientte-movil-3.jpg" data-nombre="la vitrina">Vitrina</button>
-                <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-4.jpg" data-movil="img/valientte-movil-4.jpg" data-nombre="esmeraldas">Esmeraldas</button>
+                <button type="button" class="pestana" aria-pressed="true" data-pc="img/valientte-pc-1.jpg?v=2" data-movil="img/valientte-movil-1.jpg?v=2" data-nombre="portada">Portada</button>
+                <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-2.jpg?v=2" data-movil="img/valientte-movil-2.jpg?v=2" data-nombre="la vitrina">Vitrina</button>
+                <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-3.jpg?v=2" data-movil="img/valientte-movil-3.jpg?v=2" data-nombre="materiales">Materiales</button>
+                <button type="button" class="pestana" aria-pressed="false" data-pc="img/valientte-pc-4.jpg?v=2" data-movil="img/valientte-movil-4.jpg?v=2" data-nombre="esmeraldas">Esmeraldas</button>
               </div>
               <a class="boton boton--acento js-magnetico" href="https://valientte.com/" target="_blank" rel="noopener" data-cursor="abrir">Visitar la página <svg class="icono" aria-hidden="true"><use href="#i-sale"/></svg></a>
             </div>
@@ -263,10 +264,10 @@
                     <span>valientte.com</span>
                   </a>
                 </div>
-                <img class="js-pc" src="img/valientte-pc-2.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="Valientte en computador: colecciones">
+                <img class="js-pc" src="img/valientte-pc-1.jpg?v=2" width="1600" height="1000" loading="lazy" decoding="async" alt="Valientte en computador: portada">
               </div>
               <div class="celular">
-                <img class="js-movil" src="img/valientte-movil-2.jpg" width="780" height="1688" loading="lazy" decoding="async" alt="Valientte en celular: colecciones">
+                <img class="js-movil" src="img/valientte-movil-1.jpg?v=2" width="780" height="1688" loading="lazy" decoding="async" alt="Valientte en celular: portada">
                 <span class="nota nota--celular" aria-hidden="true">así se ve en<br>tu celular
                   <svg class="nota__flecha" viewBox="0 0 60 40"><path d="M4 6 C 20 4, 40 12, 50 32"/><path d="M42 30 L50 33 L52 24"/></svg>
                 </span>

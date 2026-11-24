@@ -658,3 +658,16 @@ html.js.con-pin .proceso { height: 260vh; }
 .pie__correo { -webkit-user-select: text; user-select: text; }
 /* El contacto conserva su lima aunque el pie ya esté entrando */
 .contacto { background: var(--lima); color: var(--noche); --tinta: var(--noche); }
+
+/* ---------- Tarjeta de Valientte: colores y letras de su manual de marca ---------- */
+/* Playfair Display (todo su sitio) + Montserrat en mayúsculas espaciadas (sus rótulos) */
+.caso--valientte .caso__nombre { font-family: "Playfair Display", Georgia, serif; font-weight: 400; font-stretch: normal; text-transform: none; letter-spacing: -.01em; line-height: 1; font-size: clamp(2.6rem, 5vw, 6rem); }
+.caso--valientte .caso__texto { font-family: "Playfair Display", Georgia, serif; font-size: 1.06em; line-height: 1.45; }
+.caso--valientte .caso__datos,
+.caso--valientte .pestana,
+.caso--valientte .boton { font-family: "Montserrat", system-ui, sans-serif; text-transform: uppercase; letter-spacing: .16em; font-size: .74rem; font-weight: 500; }
+.caso--valientte .pestana { font-weight: 600; }
+/* Caramelo oscuro de su paleta para que el texto se lea sobre arena (AA) */
+.caso--valientte .estado { color: #7A4D2B; }
+.caso--valientte .boton--acento { color: #FFF5EB; }
+.caso--valientte .boton--acento:hover { background: var(--c-tinta); color: #FFF5EB; }
